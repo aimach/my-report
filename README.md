@@ -1,4 +1,4 @@
-# MERN Full Stack Application
+# My-Report, a MERN Full Stack Application
 
 ## Description
 
