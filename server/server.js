@@ -1,13 +1,30 @@
 import express from "express";
 import cors from "cors";
-import records from "./routes/record.js";
+import mongoose from "mongoose";
+
+import { clientRoutes } from "./routes/client.js";
+import { commercialRoutes } from "./routes/commercial.js";
+import { articleRoutes } from "./routes/article.js";
+import { visitRoutes } from "./routes/visit.js";
 
 const PORT = process.env.PORT || 5050;
+const uri = process.env.ATLAS_URI || "";
+
 const app = express();
+
+mongoose
+  .connect(uri)
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(cors());
 app.use(express.json());
-app.use("/record", records);
+
+// routes declaration
+app.use("/api/clients", clientRoutes);
+app.use("/api/commercials", commercialRoutes);
+app.use("/api/articles", articleRoutes);
+app.use("/api/visits", visitRoutes);
 
 // start the Express server
 app.listen(PORT, () => {
