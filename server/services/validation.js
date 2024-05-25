@@ -60,10 +60,12 @@ const dataValidation = {
       mail: Joi.string().email().required().messages({
         "string.base": "Le mail doit être une chaîne de caractères",
         "string.email": "Le champ doit être de type email",
+        "string.empty": "Le champ mail ne peut être vide",
         "any.required": "Le champ mail ne peut être vide",
       }),
       password: Joi.string().required().messages({
         "string.base": "Le mot de passe doit être une chaîne de caractères",
+        "string.empty": "Le champ mot de passe ne peut être vide",
         "any.required": "Le champ mot de passe ne peut être vide",
       }),
     });

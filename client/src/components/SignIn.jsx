@@ -11,21 +11,24 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { login } from "../services/auth";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/authContext";
 
 export default function SignIn() {
   const [authInformations, setAuthInformations] = useState({
     mail: "",
     password: "",
   });
+  const { connected, setConnected, profile, setProfile } =
+    useContext(AuthContext);
 
   const handleInputChange = (field, value) => {
     setAuthInformations({ ...authInformations, [field]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    login(authInformations);
+    await login(authInformations, connected, setConnected, profile, setProfile);
   };
 
   return (
