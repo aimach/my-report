@@ -8,7 +8,8 @@ import { articleRoutes } from "./routes/article.js";
 import { visitRoutes } from "./routes/visit.js";
 import { authRoutes } from "./routes/auth.js";
 
-const PORT = process.env.PORT || 5050;
+const backendPort = process.env.PORT || 5050;
+const frontendURL = process.env.FRONTEND_URL || 5173;
 const uri = process.env.ATLAS_URI || "";
 
 const app = express();
@@ -20,7 +21,7 @@ mongoose
   })
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-app.use(cors());
+app.use(cors({ origin: [frontendURL], credentials: true }));
 app.use(express.json());
 
 // routes declaration
@@ -31,6 +32,6 @@ app.use("/api/visits", visitRoutes);
 app.use("/api/auth", authRoutes);
 
 // start the Express server
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+app.listen(backendPort, () => {
+  console.log(`Server listening on port ${backendPort}`);
 });
