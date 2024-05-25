@@ -1,8 +1,11 @@
 import connexion from "./connexion";
 
-const getAllVisitsWithCommercialId = async () => {
+const getAllVisitsWithCommercialId = async (sortType, direction) => {
   try {
-    const response = await connexion.get("/visits");
+    let url = "/visits";
+    if (sortType && direction)
+      url += `?sort=${sortType}&direction=${direction}`;
+    const response = await connexion.get(url);
     return response.data;
   } catch (error) {
     console.error(error);

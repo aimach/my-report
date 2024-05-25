@@ -2,10 +2,58 @@ import Visit from "../models/visit.js";
 
 export const VisitController = {
   getVisits: async (req, res) => {
+    let sort = {};
+    if (req.query.sort === "date") {
+      sort.date = req.query.direction;
+    }
+    if (req.query.sort === "sales") {
+      sort.sales = req.query.direction;
+    }
+
     try {
       let visits = await Visit.find({ commercial: req.user.commercialId })
-        .populate(["commercial", "client", "article"])
+        .populate([
+          { path: "commercial" },
+          { path: "client" },
+          { path: "article" },
+        ])
+        .sort(sort)
         .exec();
+
+      if (req.query.sort === "client" && req.query.direction === "asc") {
+        visits = visits.sort((a, b) => {
+          if (a.client.lastname < b.client.lastname) return -1;
+          if (a.client.lastname > b.client.lastname) return 1;
+          return 0;
+        });
+      } else if (
+        req.query.sort === "client" &&
+        req.query.direction === "desc"
+      ) {
+        visits = visits.sort((a, b) => {
+          if (a.client.lastname > b.client.lastname) return -1;
+          if (a.client.lastname < b.client.lastname) return 1;
+          return 0;
+        });
+      }
+
+      if (req.query.sort === "article" && req.query.direction === "asc") {
+        visits = visits.sort((a, b) => {
+          if (a.article.name < b.article.name) return -1;
+          if (a.article.name > b.article.name) return 1;
+          return 0;
+        });
+      } else if (
+        req.query.sort === "article" &&
+        req.query.direction === "desc"
+      ) {
+        visits = visits.sort((a, b) => {
+          if (a.article.name > b.article.name) return -1;
+          if (a.article.name < b.article.name) return 1;
+          return 0;
+        });
+      }
+
       res.send(visits).status(200);
     } catch (error) {
       console.error(error);

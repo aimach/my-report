@@ -1,7 +1,6 @@
 import { format, isFuture } from "date-fns";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -15,16 +14,16 @@ function VisitRow({ visit, handleDeleteButton }) {
     >
       <TableCell component="th" scope="row">
         {isFuture(visit.date) ? (
-          <Chip label="Passé" color="primary" variant="outlined" />
-        ) : (
           <Chip label="A venir" color="success" variant="outlined" />
+        ) : (
+          <Chip label="Passée" color="primary" variant="outlined" />
         )}
       </TableCell>
       <TableCell component="th" scope="row">
         {format(visit.date, "dd/MM/yyyy")}
       </TableCell>
       <TableCell component="th" scope="row">
-        {visit.client.firstname} {visit.client.lastname}
+        {visit.client.lastname} {visit.client.firstname}
       </TableCell>
       <TableCell component="th" scope="row">
         {visit.article.name}
