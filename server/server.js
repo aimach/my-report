@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 import { clientRoutes } from "./routes/client.js";
 import { commercialRoutes } from "./routes/commercial.js";
@@ -23,6 +24,7 @@ mongoose
 
 app.use(cors({ origin: [frontendURL], credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // routes declaration
 app.use("/api/clients", clientRoutes);
