@@ -13,14 +13,15 @@ import Container from "@mui/material/Container";
 import { login } from "../services/auth";
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [authInformations, setAuthInformations] = useState({
     mail: "",
     password: "",
   });
-  const { connected, setConnected, profile, setProfile } =
-    useContext(AuthContext);
+  const { setConnected, setProfile } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
     setAuthInformations({ ...authInformations, [field]: value });
@@ -28,7 +29,10 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await login(authInformations, connected, setConnected, profile, setProfile);
+    const isLoggedIn = await login(authInformations, setConnected, setProfile);
+    if (isLoggedIn) {
+      navigate("/");
+    }
   };
 
   return (

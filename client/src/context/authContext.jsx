@@ -1,4 +1,6 @@
-import { createContext, useState, useMemo, useContext } from "react";
+import { createContext, useState, useMemo, useContext, useEffect } from "react";
+import connexion from "../services/connexion";
+import { removeAuthCookie } from "../services/auth";
 
 export const AuthContext = createContext();
 
@@ -8,7 +10,22 @@ export function AuthProvider({ children }) {
   const [connected, setConnected] = useState(false);
   const [profile, setProfile] = useState(null);
 
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const profileResponse = await connexion.get(`/auth/profile`);
+        if (profileResponse.status === 200) {
+          setConnected(true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getProfile();
+  }, []);
+
   const logout = () => {
+    removeAuthCookie();
     setConnected(false);
   };
 

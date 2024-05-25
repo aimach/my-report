@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
+import ReportList from "./pages/ReportList.jsx";
+
 import "./index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -16,8 +18,12 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "create",
-        element: <div>Page de création d&apos;un compte-rendu</div>,
+        path: "/",
+        element: <ReportList />,
+      },
+      {
+        path: "/create",
+        element: <div>Page de création dun compte rendu</div>,
       },
       {
         path: "dashboard",

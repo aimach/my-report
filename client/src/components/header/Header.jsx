@@ -1,5 +1,6 @@
-import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -20,8 +21,10 @@ const logoStyle = {
 };
 
 function Header() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  let location = useLocation();
+  const { connected, logout } = useContext(AuthContext);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -72,42 +75,67 @@ function Header() {
               <Link to="/">
                 <img src={logo} style={logoStyle} alt="logo of my report" />
               </Link>
-              <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                <MenuItem
-                  onClick={() => navigate("/")}
-                  sx={{ py: "6px", px: "12px" }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Gérer mes comptes rendus
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => navigate("/create")}
-                  sx={{ py: "6px", px: "12px" }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Créer un compte-rendu
-                  </Typography>
-                </MenuItem>
-              </Box>
+              {connected && (
+                <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                  <MenuItem
+                    onClick={() => navigate("/")}
+                    sx={{ py: "6px", px: "12px" }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Gérer mes comptes rendus
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => navigate("/create")}
+                    sx={{ py: "6px", px: "12px" }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Créer un compte-rendu
+                    </Typography>
+                  </MenuItem>
+                </Box>
+              )}
             </Box>
-            <Box
-              sx={{
-                display: { xs: "none", md: "flex" },
-                gap: 0.5,
-                alignItems: "center",
-              }}
-            >
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                href="/login"
+            {connected && (
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  gap: 0.5,
+                  alignItems: "center",
+                }}
               >
-                Se connecter
-              </Button>
-            </Box>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  component="a"
+                  href="/login"
+                  onClick={logout}
+                >
+                  Se déconnecter
+                </Button>
+              </Box>
+            )}
+            {!connected && location.pathname !== "/login" && (
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  gap: 0.5,
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  component="a"
+                  href="/login"
+                >
+                  Se connecter
+                </Button>
+              </Box>
+            )}
+
             <Box sx={{ display: { sm: "", md: "none" } }}>
               <Button
                 variant="text"
