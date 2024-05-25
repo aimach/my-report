@@ -1,8 +1,11 @@
 import express from "express";
 import { ArticleController } from "../controllers/articleController.js";
 import dataValidation from "../services/validation.js";
+import checkCredentials from "../services/credentials.js";
 
 export const articleRoutes = express.Router();
+
+articleRoutes.use(checkCredentials);
 
 articleRoutes.get("/", ArticleController.getArticles);
 

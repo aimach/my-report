@@ -1,8 +1,11 @@
 import express from "express";
 import { ClientController } from "../controllers/clientController.js";
 import dataValidation from "../services/validation.js";
+import checkCredentials from "../services/credentials.js";
 
 export const clientRoutes = express.Router();
+
+clientRoutes.use(checkCredentials);
 
 clientRoutes.get("/", ClientController.getClients);
 

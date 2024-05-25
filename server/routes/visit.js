@@ -1,8 +1,11 @@
 import express from "express";
 import { VisitController } from "../controllers/visitController.js";
 import dataValidation from "../services/validation.js";
+import checkCredentials from "../services/credentials.js";
 
 export const visitRoutes = express.Router();
+
+visitRoutes.use(checkCredentials);
 
 visitRoutes.get("/", VisitController.getVisits);
 
