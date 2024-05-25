@@ -3,14 +3,15 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import ReportList from "./pages/ReportList.jsx";
+import SignIn from "./components/SignIn.jsx";
+import { AuthProvider } from "./context/authContext.jsx";
+import { getAllVisitsWithCommercialId } from "./services/visits.js";
 
 import "./index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import SignIn from "./components/SignIn.jsx";
-import { AuthProvider } from "./context/authContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,9 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <ReportList />,
+        loader: () => {
+          return getAllVisitsWithCommercialId();
+        },
       },
       {
         path: "/create",

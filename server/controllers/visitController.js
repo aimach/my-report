@@ -3,7 +3,7 @@ import Visit from "../models/visit.js";
 export const VisitController = {
   getVisits: async (req, res) => {
     try {
-      let visits = await Visit.find()
+      let visits = await Visit.find({ commercial: req.user.commercialId })
         .populate(["commercial", "client", "article"])
         .exec();
       if (!visits.length) {
