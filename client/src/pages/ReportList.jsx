@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { Typography } from "@mui/material";
+import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
 
+import { Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,7 +12,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import VisitRow from "../components/VisitRow";
-import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
 
 function ReportList() {
   const { connected } = useContext(AuthContext);
@@ -26,6 +26,7 @@ function ReportList() {
 
   const handleDeleteButton = async (visitId) => {
     await deleteVisit(visitId);
+    setIsDeleted(true);
     const visitsAfterDelete = await getAllVisitsWithCommercialId();
     setVisits(visitsAfterDelete);
   };
