@@ -37,7 +37,7 @@ const dataValidation = {
         "string.email": "Le champ doit être de type email",
         "any.required": "Le champ mail ne peut être vide",
       }),
-      password: Joi.string().email().required().messages({
+      password: Joi.string().required().messages({
         "string.base": "Le mot de passe doit être une chaîne de caractères",
         "any.required": "Le champ mot de passe ne peut être vide",
       }),
@@ -62,7 +62,7 @@ const dataValidation = {
         "string.email": "Le champ doit être de type email",
         "any.required": "Le champ mail ne peut être vide",
       }),
-      password: Joi.string().email().required().messages({
+      password: Joi.string().required().messages({
         "string.base": "Le mot de passe doit être une chaîne de caractères",
         "any.required": "Le champ mot de passe ne peut être vide",
       }),
