@@ -25,7 +25,6 @@ export const AuthController = {
   },
 
   login: async (req, res) => {
-    console.log(req.body);
     const { mail, password } = req.body;
     const jwtKey = process.env.JWT_KEY;
 
@@ -58,6 +57,26 @@ export const AuthController = {
     } catch (error) {
       console.error(error);
       res.status(500).send("Erreur serveur");
+    }
+  },
+
+  getProfile: async (req, res) => {
+    const commercial = await Commercial.findOne({
+      _id: req.user.commercialId,
+    }).select("-password");
+    if (commercial) {
+      res.status(200).send(commercial);
+    } else {
+      res.sendStatus(403);
+    }
+  },
+
+  logout: async (req, res) => {
+    res.clearCookie("auth");
+    if (req.cookies.auth) {
+      res.status(500).send("Erreur serveur");
+    } else {
+      res.sendStatus(200);
     }
   },
 };
