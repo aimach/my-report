@@ -39,7 +39,7 @@ export const AuthController = {
       const passwordMatch = await compare(password, commercial.password);
       // s'ils ne correspondent pas, on renvoie un message d'erreur
       if (!passwordMatch) {
-        return res.status(401).send("Connextion non authorisée");
+        return res.status(401).send("Connexion non authorisée");
       }
       // génération du token
       const token = jwt.sign(

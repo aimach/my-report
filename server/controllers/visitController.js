@@ -6,11 +6,7 @@ export const VisitController = {
       let visits = await Visit.find({ commercial: req.user.commercialId })
         .populate(["commercial", "client", "article"])
         .exec();
-      if (!visits.length) {
-        res.send("Pas de visites").status(200);
-      } else {
-        res.send(visits).status(200);
-      }
+      res.send(visits).status(200);
     } catch (error) {
       console.error(error);
       res.status(500).send("Erreur serveur");

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { Typography } from "@mui/material";
@@ -11,18 +11,24 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import VisitRow from "../components/VisitRow";
+import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
 
 function ReportList() {
   const { connected } = useContext(AuthContext);
   const navigate = useNavigate();
-  const visits = useLoaderData();
-  console.log(visits);
+  const [visits, setVisits] = useState(useLoaderData());
 
   useEffect(() => {
     if (!connected) {
       navigate("/login");
     }
   }, [connected, navigate]);
+
+  const handleDeleteButton = async (visitId) => {
+    await deleteVisit(visitId);
+    const visitsAfterDelete = await getAllVisitsWithCommercialId();
+    setVisits(visitsAfterDelete);
+  };
 
   return (
     <div>
@@ -35,7 +41,8 @@ function ReportList() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Date</TableCell>
+                  <TableCell align="center">Statut</TableCell>
+                  <TableCell align="center">Date</TableCell>
                   <TableCell align="center">Client</TableCell>
                   <TableCell align="center">Article</TableCell>
                   <TableCell align="center">Nombre</TableCell>
@@ -45,7 +52,11 @@ function ReportList() {
               </TableHead>
               <TableBody>
                 {visits.map((row) => (
-                  <VisitRow visit={row} key={row._id} />
+                  <VisitRow
+                    visit={row}
+                    handleDeleteButton={handleDeleteButton}
+                    key={row._id}
+                  />
                 ))}
               </TableBody>
             </Table>

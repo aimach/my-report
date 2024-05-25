@@ -10,7 +10,7 @@ const uri = process.env.ATLAS_URI || "";
 const articleNb = 10;
 const clientNb = 10;
 const commercialNb = 5;
-const visitNb = 10;
+const visitNb = 100;
 
 const generateArticles = (num) => {
   const articles = [];

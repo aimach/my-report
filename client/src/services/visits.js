@@ -6,7 +6,16 @@ const getAllVisitsWithCommercialId = async () => {
     return response.data;
   } catch (error) {
     console.error(error);
+    return null;
   }
 };
 
-export { getAllVisitsWithCommercialId };
+const deleteVisit = async (visitId) => {
+  try {
+    await connexion.delete(`/visits/${visitId}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export { getAllVisitsWithCommercialId, deleteVisit };
