@@ -25,6 +25,7 @@ export const AuthController = {
   },
 
   login: async (req, res) => {
+    console.log(req.body);
     const { mail, password } = req.body;
     const jwtKey = process.env.JWT_KEY;
 

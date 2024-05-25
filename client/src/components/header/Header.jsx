@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
@@ -163,9 +162,5 @@ function Header() {
     </div>
   );
 }
-
-Header.propTypes = {
-  mode: PropTypes.oneOf(["dark", "light"]).isRequired,
-};
 
 export default Header;
