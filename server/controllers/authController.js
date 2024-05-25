@@ -13,8 +13,14 @@ export const AuthController = {
       await newCommercial.save();
       res.status(201).send("Nouveau commercial enregistré !");
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Cet email existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 

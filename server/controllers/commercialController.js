@@ -42,8 +42,14 @@ export const CommercialController = {
       }
       res.status(200).json(updateCommercial);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Cet email existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 

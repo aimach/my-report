@@ -36,8 +36,14 @@ export const ArticleController = {
       const savedArticle = await newArticle.save();
       res.status(201).send(savedArticle);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Ce nom d'article existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 
@@ -53,8 +59,14 @@ export const ArticleController = {
       }
       res.status(200).json(updatedArticle);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Ce nom d'article existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 

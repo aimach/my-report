@@ -36,8 +36,14 @@ export const ClientController = {
       const savedClient = await newClient.save();
       res.status(201).send(savedClient);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Cet email existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 
@@ -53,8 +59,14 @@ export const ClientController = {
       }
       res.status(200).json(updateClient);
     } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
+      if (error.code === 11000) {
+        console.log(error);
+        // si c'est le code erreur de duplicateKey
+        res.status(400).send("Cet email existe déjà");
+      } else {
+        console.error(error);
+        res.status(500).send("Erreur serveur");
+      }
     }
   },
 
