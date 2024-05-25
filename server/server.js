@@ -6,6 +6,7 @@ import { clientRoutes } from "./routes/client.js";
 import { commercialRoutes } from "./routes/commercial.js";
 import { articleRoutes } from "./routes/article.js";
 import { visitRoutes } from "./routes/visit.js";
+import { authRoutes } from "./routes/auth.js";
 
 const PORT = process.env.PORT || 5050;
 const uri = process.env.ATLAS_URI || "";
@@ -25,6 +26,7 @@ app.use("/api/clients", clientRoutes);
 app.use("/api/commercials", commercialRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/visits", visitRoutes);
+app.use("/api/auth", authRoutes);
 
 // start the Express server
 app.listen(PORT, () => {

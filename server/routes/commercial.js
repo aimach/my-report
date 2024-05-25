@@ -7,8 +7,6 @@ commercialRoutes.get("/", CommercialController.getCommercials);
 
 commercialRoutes.get("/:id", CommercialController.getOneCommercial);
 
-commercialRoutes.post("/", CommercialController.createCommercial);
-
 commercialRoutes.put("/:id", CommercialController.updateCommercial);
 
 commercialRoutes.delete("/:id", CommercialController.deleteCommercial);

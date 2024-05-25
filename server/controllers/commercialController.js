@@ -30,17 +30,6 @@ export const CommercialController = {
     }
   },
 
-  createCommercial: async (req, res) => {
-    try {
-      const newCommercial = new Commercial(req.body);
-      const savedCommercial = await newCommercial.save();
-      res.status(201).send(savedCommercial);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Erreur serveur");
-    }
-  },
-
   updateCommercial: async (req, res) => {
     try {
       const updateCommercial = await Commercial.findByIdAndUpdate(
