@@ -15,7 +15,9 @@ const app = express();
 
 mongoose
   .connect(uri)
-  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .then(() => {
+    console.log("Connexion à MongoDB réussie !");
+  })
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use(cors());

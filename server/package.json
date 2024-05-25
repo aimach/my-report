@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --env-file=config.env server.js"
+    "server": "nodemon --env-file=config.env server.js",
+    "seed": "node --env-file=config.env seed/seed.js"
   },
   "type": "module",
   "keywords": [],
@@ -22,6 +23,7 @@
     "mongoose": "^8.4.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "nodemon": "^3.1.0"
   }
 }
