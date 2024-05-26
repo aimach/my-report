@@ -46,15 +46,18 @@ const updateVisit = async (body) => {
     if (response.data) return true;
   } catch (error) {
     console.error(error);
-    return null;
+    return false;
   }
 };
 
 const deleteVisit = async (visitId) => {
   try {
-    await connexion.delete(`/visits/${visitId}`);
+    const response = await connexion.delete(`/visits/${visitId}`);
+    console.log(response);
+    if (response.status === 200) return true;
   } catch (error) {
     console.error(error);
+    return false;
   }
 };
 

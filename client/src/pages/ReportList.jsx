@@ -4,7 +4,14 @@ import connexion from "../services/connexion";
 import VisitRow from "../components/VisitRow";
 import PaginationComponent from "../components/PaginationComponent";
 
-import { TableSortLabel, Typography, Container } from "@mui/material";
+import {
+  TableSortLabel,
+  Typography,
+  Container,
+  Snackbar,
+  Slide,
+  Alert,
+} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -20,6 +27,11 @@ function ReportList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [resultNb, setResultNb] = useState(10);
   const [allVisitsNb, setAllVisitsNb] = useState(0);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "Bien supprimé !",
+    severity: "success",
+  });
 
   useEffect(() => {
     const getVisitsNb = async () => {
@@ -50,9 +62,18 @@ function ReportList() {
   const pageNb = Math.ceil(allVisitsNb / resultNb);
 
   const handleDeleteButton = async (visitId) => {
-    await deleteVisit(visitId);
-    const visitsAfterDelete = await getAllVisitsWithCommercialId();
-    setVisits(visitsAfterDelete);
+    const isDeleted = await deleteVisit(visitId);
+    if (isDeleted) {
+      setAlert({ ...alert, open: true });
+      const visitsAfterDelete = await getAllVisitsWithCommercialId();
+      setVisits(visitsAfterDelete);
+    } else {
+      setAlert({
+        open: true,
+        message: "Oups ! Le compte rendu n'a pas pu être supprimé",
+        severity: "error",
+      });
+    }
   };
 
   const handleSortLabel = async (sortType) => {
@@ -162,6 +183,17 @@ function ReportList() {
       ) : (
         <div>Pas encore de visites</div>
       )}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={alert.open}
+        autoHideDuration={2000}
+        onClose={() => setAlert({ ...alert, open: false })}
+        TransitionComponent={Slide}
+      >
+        <Alert severity={alert.severity} sx={{ width: "100%" }}>
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
