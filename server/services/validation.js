@@ -146,6 +146,12 @@ const dataValidation = {
 
   visit: async (req, res, next) => {
     const visitSchema = Joi.object({
+      _id: Joi.string().messages({
+        "string.base": "Le champ id doit être une chaîne de caractères",
+      }),
+      __v: Joi.number().messages({
+        "string.number": "Le champ __v doit être un nombre",
+      }),
       commercial: Joi.string().messages({
         "string.base": "Le champ commercial doit être une chaîne de caractères",
       }),

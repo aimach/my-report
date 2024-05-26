@@ -13,10 +13,32 @@ const getAllVisitsWithCommercialId = async (sortType, direction) => {
   }
 };
 
+const getVisitById = async (visitId) => {
+  try {
+    const response = await connexion.get(`/visits/${visitId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const createVisit = async (body) => {
   try {
     let url = "/visits";
     await connexion.post(url, body).then((res) => {
+      if (res.data) return true;
+    });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const updateVisit = async (body) => {
+  try {
+    let url = `/visits/${body._id}`;
+    await connexion.put(url, body).then((res) => {
       if (res.data) return true;
     });
   } catch (error) {
@@ -33,4 +55,10 @@ const deleteVisit = async (visitId) => {
   }
 };
 
-export { getAllVisitsWithCommercialId, createVisit, deleteVisit };
+export {
+  getAllVisitsWithCommercialId,
+  getVisitById,
+  createVisit,
+  updateVisit,
+  deleteVisit,
+};

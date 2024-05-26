@@ -91,6 +91,9 @@ export const VisitController = {
   },
 
   updateVisit: async (req, res) => {
+    // on s'assure que le champ commercial est bien celui du commercial qui fait la requête
+    req.body.commercial = req.user.commercialId;
+
     try {
       const updateVisit = await Visit.findByIdAndUpdate(
         req.params.id,

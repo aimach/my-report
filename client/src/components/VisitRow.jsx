@@ -5,11 +5,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Chip, IconButton, Tooltip } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function VisitRow({ visit, handleDeleteButton }) {
+  const navigate = useNavigate();
   return (
     <TableRow
-      key={visit.id}
+      key={visit._id}
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
     >
       <TableCell component="th" scope="row">
@@ -28,10 +30,10 @@ function VisitRow({ visit, handleDeleteButton }) {
       <TableCell component="th" scope="row">
         {visit.article.name}
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="right">
         {visit.article_nb}
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="right">
         {visit.sales} €
       </TableCell>
       <TableCell component="th" scope="row">
@@ -41,7 +43,11 @@ function VisitRow({ visit, handleDeleteButton }) {
           </IconButton>
         </Tooltip>
         <Tooltip title="Modifier">
-          <IconButton color="primary" aria-label="edit-visit">
+          <IconButton
+            color="primary"
+            aria-label="edit-visit"
+            onClick={() => navigate(`/visit/${visit._id}`)}
+          >
             <EditIcon />
           </IconButton>
         </Tooltip>
