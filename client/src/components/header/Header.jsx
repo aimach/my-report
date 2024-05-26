@@ -24,7 +24,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   let location = useLocation();
-  const { connected, logout } = useContext(AuthContext);
+  const { connected, profile, logout } = useContext(AuthContext);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -93,6 +93,16 @@ function Header() {
                       Créer un compte-rendu
                     </Typography>
                   </MenuItem>
+                  {profile.is_director && (
+                    <MenuItem
+                      onClick={() => navigate("/dashboard")}
+                      sx={{ py: "6px", px: "12px" }}
+                    >
+                      <Typography variant="body2" color="text.primary">
+                        Dashboard
+                      </Typography>
+                    </MenuItem>
+                  )}
                 </Box>
               )}
             </Box>

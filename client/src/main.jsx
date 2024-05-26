@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
 import CreateReport from "./pages/CreateReport.jsx";
+import DirectorPage from "./pages/DirectorPage.jsx";
 import { AuthProvider } from "./context/authContext.jsx";
 import { getAllVisitsWithCommercialId } from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <div>Page du dashboard du directeur commercial</div>,
+        element: <DirectorPage />,
       },
       {
         path: "login",

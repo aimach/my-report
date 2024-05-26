@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
       try {
         const profileResponse = await connexion.get(`/auth/profile`);
         if (profileResponse.status === 200) {
+          setProfile(profileResponse.data);
           setConnected(true);
         }
       } catch (err) {
