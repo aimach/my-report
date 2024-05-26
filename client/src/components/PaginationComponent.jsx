@@ -7,7 +7,12 @@ export default function PaginationComponent({
   setCurrentPage,
 }) {
   return (
-    <Stack spacing={2}>
+    <Stack
+      spacing={2}
+      sx={{
+        pt: { xs: 8, sm: 8 },
+      }}
+    >
       <Pagination
         count={pageNb}
         page={currentPage}

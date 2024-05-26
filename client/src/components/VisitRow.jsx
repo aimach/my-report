@@ -21,13 +21,13 @@ function VisitRow({ visit, handleDeleteButton }) {
           <Chip label="Passée" color="primary" variant="outlined" />
         )}
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="center">
         {format(visit.date, "dd/MM/yyyy")}
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="center">
         {visit.client.lastname} {visit.client.firstname}
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="center">
         {visit.article.name}
       </TableCell>
       <TableCell component="th" scope="row" align="right">
@@ -36,7 +36,7 @@ function VisitRow({ visit, handleDeleteButton }) {
       <TableCell component="th" scope="row" align="right">
         {visit.sales} €
       </TableCell>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" align="center">
         <Tooltip title="Voir">
           <IconButton color="primary" aria-label="see-visit">
             <VisibilityIcon />

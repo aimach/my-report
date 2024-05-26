@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
 import connexion from "../services/connexion";
+import VisitRow from "../components/VisitRow";
+import PaginationComponent from "../components/PaginationComponent";
 
-import { TableSortLabel, Typography } from "@mui/material";
+import { TableSortLabel, Typography, Container } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,8 +12,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import VisitRow from "../components/VisitRow";
-import PaginationComponent from "../components/PaginationComponent";
 
 function ReportList() {
   const [visits, setVisits] = useState([]);
@@ -68,12 +68,31 @@ function ReportList() {
   };
 
   return (
-    <div>
-      <Typography variant="h4" color="text.primary">
-        Gérer mes comptes rendus
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        pb: { xs: 8, sm: 12 },
+      }}
+    >
+      <Typography
+        variant="h2"
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignSelf: "center",
+          textAlign: "center",
+          fontSize: "clamp(3.5rem, 10vw, 4rem)",
+          pb: { xs: 8, sm: 8 },
+          fontWeight: 500,
+        }}
+        color="primary"
+      >
+        Mes comptes rendus
       </Typography>
       {visits.length ? (
-        <div>
+        <>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -108,9 +127,8 @@ function ReportList() {
                       Article
                     </TableSortLabel>
                   </TableCell>
-
-                  <TableCell align="center">Nombre</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right">Nombre</TableCell>
+                  <TableCell align="right">
                     <TableSortLabel
                       active={sortType === "sales"}
                       direction={sortDirection}
@@ -140,11 +158,11 @@ function ReportList() {
               setCurrentPage={setCurrentPage}
             />
           )}
-        </div>
+        </>
       ) : (
         <div>Pas encore de visites</div>
       )}
-    </div>
+    </Container>
   );
 }
 
