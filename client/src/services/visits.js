@@ -17,8 +17,7 @@ const createVisit = async (body) => {
   try {
     let url = "/visits";
     await connexion.post(url, body).then((res) => {
-      console.log(res);
-      return true;
+      if (res.data) return true;
     });
   } catch (error) {
     console.error(error);

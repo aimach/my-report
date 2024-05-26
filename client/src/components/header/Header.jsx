@@ -86,7 +86,7 @@ function Header() {
                     </Typography>
                   </MenuItem>
                   <MenuItem
-                    onClick={() => navigate("/create")}
+                    onClick={() => navigate("/visit/new")}
                     sx={{ py: "6px", px: "12px" }}
                   >
                     <Typography variant="body2" color="text.primary">

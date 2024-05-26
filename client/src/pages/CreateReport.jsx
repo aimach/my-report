@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
 import DateSelect from "../components/DatePicker";
@@ -21,33 +21,33 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function CreateReport() {
   const { clients, articles } = useLoaderData();
-  const [selectedClientId, setSelectedClientId] = useState(clients[0]._id);
-  const [selectedArticleId, setSelectedArticleId] = useState(articles[0]._id);
-  const [articleNb, setArticleNb] = useState(0);
-  const [sales, setSales] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [reportContent, setReportContent] = useState("");
+  const { id } = useParams();
+  let visitBody = {};
+  if (id === "new") {
+    // si c'et une creation de compte rendu
+    visitBody = {
+      client: clients[0]._id,
+      date: new Date(),
+      report_content: "",
+      article: articles[0]._id,
+      article_nb: 0,
+      sales: 0,
+    };
+  }
+
+  const [visit, setVisit] = useState(visitBody);
 
   const handleArticleNb = (articleNb) => {
-    setArticleNb(articleNb);
     const [selectedArticle] = articles.filter(
-      (article) => article._id === selectedArticleId
+      (article) => article._id === visit.article
     );
     const totalPrice = selectedArticle.price * articleNb;
-    setSales(totalPrice);
+    setVisit({ ...visit, article_nb: articleNb, sales: totalPrice });
   };
 
   const submitVisitForm = async (event) => {
     event.preventDefault();
-    const body = {
-      client: selectedClientId,
-      date: selectedDate,
-      report_content: reportContent,
-      article: selectedArticleId,
-      article_nb: articleNb,
-      sales,
-    };
-    const isCreated = await createVisit(body);
+    const isCreated = await createVisit(visit);
     if (isCreated) {
       console.log("ça a bien été créé !");
     }
@@ -67,14 +67,13 @@ function CreateReport() {
                   label="Client rencontré"
                   list={clients}
                   type="client"
-                  onChangeFunction={setSelectedClientId}
-                  selectedItem={selectedClientId}
+                  visit={visit}
+                  onChangeFunction={setVisit}
+                  selectedItem={visit.client}
                 />
                 <DisplayClientInfo
                   client={
-                    clients.filter(
-                      (client) => client._id === selectedClientId
-                    )[0]
+                    clients.filter((client) => client._id === visit.client)[0]
                   }
                 />
               </Item>
@@ -82,8 +81,9 @@ function CreateReport() {
             <Grid xs={4}>
               <Item>
                 <DateSelect
-                  selectedDate={selectedDate}
-                  setSelectedDate={setSelectedDate}
+                  selectedDate={visit.date}
+                  visit={visit}
+                  setVisit={setVisit}
                 />
               </Item>
             </Grid>
@@ -99,8 +99,10 @@ function CreateReport() {
                   fullWidth
                   multiline
                   minRows={10}
-                  onChange={(event) => setReportContent(event.target.value)}
-                  value={reportContent}
+                  onChange={(event) =>
+                    setVisit({ ...visit, report_content: event.target.value })
+                  }
+                  value={visit.reportContent}
                 />
               </Item>
             </Grid>
@@ -114,8 +116,9 @@ function CreateReport() {
                         label="Articles"
                         list={articles}
                         type="article"
-                        onChangeFunction={setSelectedArticleId}
-                        selectedItem={selectedArticleId}
+                        visit={visit}
+                        onChangeFunction={setVisit}
+                        selectedItem={visit.article}
                       />
                     </FormControl>
                   </Grid>
@@ -127,7 +130,7 @@ function CreateReport() {
                       name="articleNb"
                       autoFocus
                       onChange={(event) => handleArticleNb(event.target.value)}
-                      value={articleNb}
+                      value={visit.article_nb}
                     />
                   </Grid>
                   <Grid xs={4}>
@@ -137,7 +140,7 @@ function CreateReport() {
                       label="Chiffre d'affaire"
                       name="sales"
                       autoFocus
-                      value={`${sales} €`}
+                      value={`${visit.sales} €`}
                     />
                   </Grid>
                 </Grid>

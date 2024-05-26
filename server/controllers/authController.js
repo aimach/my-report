@@ -46,7 +46,7 @@ export const AuthController = {
         { commercialId: commercial._id, status: commercial.is_director },
         jwtKey,
         {
-          expiresIn: "1h",
+          expiresIn: "24h",
         }
       );
       res.cookie("auth", token, { httpOnly: true }).status(200).json({

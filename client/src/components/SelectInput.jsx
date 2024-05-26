@@ -6,6 +6,7 @@ export default function SelectInput({
   label,
   list,
   type,
+  visit,
   onChangeFunction,
   selectedItem,
 }) {
@@ -17,7 +18,9 @@ export default function SelectInput({
         labelId={`${type}Id`}
         id={`${type}Select`}
         value={selectedItem}
-        onChange={(event) => onChangeFunction(event.target.value)}
+        onChange={(event) =>
+          onChangeFunction({ ...visit, [type]: event.target.value })
+        }
         fullWidth
       >
         {list &&
