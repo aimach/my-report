@@ -1,14 +1,18 @@
 import { Typography } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
-export default function DateSelect({ selectedDate, visit, setVisit, id }) {
+export default function DateSelect({ selectedDate, visit, setVisit }) {
   return (
     <>
-      <Typography variant="h6">Date du rendez-vous</Typography>
-      <DatePicker
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+        Date du rendez-vous
+      </Typography>
+      <DateCalendar
         value={selectedDate}
         onChange={(newValue) => setVisit({ ...visit, date: newValue })}
-        minDate={id === "new" ? new Date() : null}
+        disablePast
+        required
+        views={["month", "day"]}
       />
     </>
   );

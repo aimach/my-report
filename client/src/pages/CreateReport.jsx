@@ -1,35 +1,27 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
+import { createVisit, updateVisit } from "../services/visits";
+import connexion from "../services/connexion";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
 import DateSelect from "../components/DatePicker";
+
 import { Typography, Container, TextField, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
-import FormControl from "@mui/material/FormControl";
-import { createVisit, updateVisit } from "../services/visits";
-import connexion from "../services/connexion";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "left",
-  color: theme.palette.text.secondary,
-}));
 
 function CreateReport() {
   const { clients, articles } = useLoaderData();
   const { id } = useParams();
   const [visit, setVisit] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (id === "new") {
       // si c'et une creation de compte rendu
       const newVisit = {
-        client: clients[0]._id,
+        client: "new",
         date: new Date(),
         report_content: "",
         article: articles[0]._id,
@@ -75,15 +67,41 @@ function CreateReport() {
 
   return (
     visit && (
-      <div>
-        <Typography variant="h4" color="text.primary">
-          Créer un compte rendu
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          pb: { xs: 8, sm: 12 },
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignSelf: "center",
+            textAlign: "center",
+            fontSize: "clamp(3.5rem, 10vw, 4rem)",
+            pb: { xs: 8, sm: 8 },
+            fontWeight: 500,
+          }}
+          color="primary"
+        >
+          {id === "new" ? "Créer un compte rendu" : "Modifier un compte rendu"}
         </Typography>
         <Container maxWidth="xl">
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1 }} component="form" onSubmit={submitVisitForm}>
             <Grid container spacing={2}>
-              <Grid xs={8}>
-                <Item>
+              <Grid xs={7.5}>
+                <Paper
+                  sx={{
+                    backgroundColor: "#fff",
+                    padding: 3,
+                    textAlign: "left",
+                    height: "370px",
+                  }}
+                >
                   <SelectInput
                     label="Client rencontré"
                     list={clients}
@@ -97,25 +115,45 @@ function CreateReport() {
                       clients.filter((client) => client._id === visit.client)[0]
                     }
                   />
-                </Item>
+                </Paper>
               </Grid>
-              <Grid xs={4}>
-                <Item>
+              <Grid xs={4.5}>
+                <Paper
+                  sx={{
+                    backgroundColor: "#fff",
+                    padding: 3,
+                    textAlign: "left",
+                    height: "370px",
+                  }}
+                >
                   <DateSelect
                     selectedDate={visit.date}
                     visit={visit}
                     setVisit={setVisit}
                   />
-                </Item>
+                </Paper>
               </Grid>
               <Grid xs={12}>
-                <Item>
-                  <Typography variant="h6">Compte rendu</Typography>
+                <Paper
+                  sx={{
+                    backgroundColor: "#fff",
+                    padding: 3,
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    color="primary"
+                    gutterBottom
+                  >
+                    Compte rendu
+                  </Typography>
                   <TextField
                     margin="normal"
                     id="reportContent"
                     name="reportContent"
-                    label="Compte-rendu"
+                    label=""
                     autoFocus
                     fullWidth
                     multiline
@@ -124,24 +162,36 @@ function CreateReport() {
                       setVisit({ ...visit, report_content: event.target.value })
                     }
                     value={visit.report_content}
+                    required
                   />
-                </Item>
+                </Paper>
               </Grid>
               <Grid xs={12}>
-                <Item>
-                  <Typography variant="h6">Articles</Typography>
+                <Paper
+                  sx={{
+                    backgroundColor: "#fff",
+                    padding: 3,
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    color="primary"
+                    gutterBottom
+                  >
+                    Articles vendus
+                  </Typography>
                   <Grid container spacing={2}>
                     <Grid xs={4}>
-                      <FormControl required sx={{ m: 1, minWidth: 120 }}>
-                        <SelectInput
-                          label="Articles"
-                          list={articles}
-                          type="article"
-                          visit={visit}
-                          onChangeFunction={setVisit}
-                          selectedItem={visit.article}
-                        />
-                      </FormControl>
+                      <SelectInput
+                        label="Articles"
+                        list={articles}
+                        type="article"
+                        visit={visit}
+                        onChangeFunction={setVisit}
+                        selectedItem={visit.article}
+                      />
                     </Grid>
                     <Grid xs={4}>
                       <TextField
@@ -149,11 +199,15 @@ function CreateReport() {
                         id="articleNb"
                         label="Nombre d'articles"
                         name="articleNb"
-                        autoFocus
                         onChange={(event) =>
                           handleArticleNb(event.target.value)
                         }
                         value={visit.article_nb}
+                        sx={{
+                          textAlign: "right",
+                          width: "100%",
+                        }}
+                        required
                       />
                     </Grid>
                     <Grid xs={4}>
@@ -162,22 +216,53 @@ function CreateReport() {
                         id="sales"
                         label="Chiffre d'affaire"
                         name="sales"
-                        autoFocus
                         value={`${visit.sales} €`}
+                        sx={{
+                          width: "100%",
+                        }}
+                        required
                       />
                     </Grid>
                   </Grid>
-                </Item>
+                </Paper>
+              </Grid>
+              <Grid xs={12}>
+                <Paper
+                  sx={{
+                    backgroundColor: "#fff",
+                    padding: 3,
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    color="primary"
+                    gutterBottom
+                  >
+                    Prochaine visite
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid xs={4}></Grid>
+                    <Grid xs={4}></Grid>
+                    <Grid xs={4}></Grid>
+                  </Grid>
+                </Paper>
               </Grid>
             </Grid>
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              sx={{ mt: 5 }}
+            >
+              {id === "new"
+                ? "Créer le compte rendu"
+                : "Modifier le compte rendu"}
+            </Button>
           </Box>
-          <Button variant="contained" onClick={submitVisitForm}>
-            {id === "new"
-              ? "Créer le compte rendu"
-              : "Modifier le compte rendu"}
-          </Button>
         </Container>
-      </div>
+      </Container>
     )
   );
 }
