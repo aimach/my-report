@@ -31,9 +31,8 @@ const getVisitById = async (visitId) => {
 const createVisit = async (body) => {
   try {
     let url = "/visits";
-    await connexion.post(url, body).then((res) => {
-      if (res.data) return true;
-    });
+    const response = await connexion.post(url, body);
+    if (response.data) return true;
   } catch (error) {
     console.error(error);
     return null;
@@ -43,9 +42,8 @@ const createVisit = async (body) => {
 const updateVisit = async (body) => {
   try {
     let url = `/visits/${body._id}`;
-    await connexion.put(url, body).then((res) => {
-      if (res.data) return true;
-    });
+    const response = await connexion.put(url, body);
+    if (response.data) return true;
   } catch (error) {
     console.error(error);
     return null;

@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { createVisit, updateVisit } from "../services/visits";
 import connexion from "../services/connexion";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
 import DateSelect from "../components/DatePicker";
 
-import { Typography, Container, TextField, Button } from "@mui/material";
+import {
+  Typography,
+  Container,
+  TextField,
+  Button,
+  Snackbar,
+  Slide,
+  Alert,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -15,7 +23,12 @@ function CreateReport() {
   const { clients, articles } = useLoaderData();
   const { id } = useParams();
   const [visit, setVisit] = useState(null);
-  const [error, setError] = useState("");
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "Bien enregistré !",
+    severity: "success",
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id === "new") {
@@ -30,6 +43,7 @@ function CreateReport() {
       };
       setVisit(newVisit);
     } else {
+      // sinon on récupère les informations de la visite
       const getVisitById = async (visitId) => {
         try {
           const response = await connexion.get(`/visits/${visitId}`);
@@ -52,16 +66,19 @@ function CreateReport() {
 
   const submitVisitForm = async (event) => {
     event.preventDefault();
-    if (id === "new") {
-      const isCreated = await createVisit(visit);
-      if (isCreated) {
-        console.log("ça a bien été créé !");
-      }
+    const isCreatedOrUpdated =
+      id === "new" ? await createVisit(visit) : await updateVisit(visit);
+    if (isCreatedOrUpdated) {
+      setAlert({ ...alert, open: true });
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } else {
-      const isUpdated = await updateVisit(visit);
-      if (isUpdated) {
-        console.log("ça a bien été créé !");
-      }
+      setAlert({
+        open: true,
+        message: "Oups ! Le compte rendu n'a pas pu être enregistré",
+        severity: "error",
+      });
     }
   };
 
@@ -261,6 +278,17 @@ function CreateReport() {
                 : "Modifier le compte rendu"}
             </Button>
           </Box>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={alert.open}
+            autoHideDuration={2000}
+            onClose={() => setAlert({ ...alert, open: false })}
+            TransitionComponent={Slide}
+          >
+            <Alert severity={alert.severity} sx={{ width: "100%" }}>
+              {alert.message}
+            </Alert>
+          </Snackbar>
         </Container>
       </Container>
     )
