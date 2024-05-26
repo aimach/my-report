@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
+import { useEffect, useState } from "react";
 import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
+import connexion from "../services/connexion";
 
 import { TableSortLabel, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
@@ -12,19 +11,43 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import VisitRow from "../components/VisitRow";
+import PaginationComponent from "../components/PaginationComponent";
 
 function ReportList() {
-  const { connected } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [visits, setVisits] = useState(useLoaderData());
+  const [visits, setVisits] = useState([]);
   const [sortType, setSortType] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [resultNb, setResultNb] = useState(10);
+  const [allVisitsNb, setAllVisitsNb] = useState(0);
 
   useEffect(() => {
-    if (!connected) {
-      navigate("/login");
-    }
-  }, [connected, navigate]);
+    const getVisitsNb = async () => {
+      try {
+        const result = await connexion.get("/visits/count");
+        setAllVisitsNb(result.data.count);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getAllVisitsWithCommercialId = async () => {
+      try {
+        let url = `/visits?resultNb=${resultNb}&currentPage=${currentPage}`;
+        if (sortType && sortDirection)
+          url += `&sort=${sortType}&direction=${sortDirection}`;
+        const response = await connexion.get(url);
+        setVisits(response.data);
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    };
+
+    getAllVisitsWithCommercialId();
+    getVisitsNb();
+  }, [resultNb, currentPage, sortType, sortDirection]);
+  const pageNb = Math.ceil(allVisitsNb / resultNb);
 
   const handleDeleteButton = async (visitId) => {
     await deleteVisit(visitId);
@@ -110,6 +133,13 @@ function ReportList() {
               </TableBody>
             </Table>
           </TableContainer>
+          {pageNb > 1 && (
+            <PaginationComponent
+              pageNb={pageNb}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </div>
       ) : (
         <div>Pas encore de visites</div>

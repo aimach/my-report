@@ -2,6 +2,8 @@ import Visit from "../models/visit.js";
 
 export const VisitController = {
   getVisits: async (req, res) => {
+    const { resultNb, currentPage } = req.query;
+
     let sort = {};
     if (req.query.sort === "date") {
       sort.date = req.query.direction;
@@ -11,13 +13,17 @@ export const VisitController = {
     }
 
     try {
-      let visits = await Visit.find({ commercial: req.user.commercialId })
+      let visits = await Visit.find({
+        commercial: req.user.commercialId,
+      })
         .populate([
           { path: "commercial" },
           { path: "client" },
           { path: "article" },
         ])
         .sort(sort)
+        .skip(parseInt(resultNb, 10) * (parseInt(currentPage, 10) - 1))
+        .limit(parseInt(resultNb, 10))
         .exec();
 
       if (req.query.sort === "client" && req.query.direction === "asc") {
@@ -64,11 +70,18 @@ export const VisitController = {
   getOneVisit: async (req, res) => {
     const { id } = req.params;
     try {
-      let visit = await Visit.findById(id).exec();
-      if (!visit) {
-        res.send("Visite non trouvée").status(404);
+      if (id === "count") {
+        let count = await Visit.countDocuments({
+          commercial: req.user.commercialId,
+        });
+        res.send({ count }).status(200);
       } else {
-        res.send(visit).status(200);
+        let visit = await Visit.findById(id).exec();
+        if (!visit) {
+          res.send("Visite non trouvée").status(404);
+        } else {
+          res.send(visit).status(200);
+        }
       }
     } catch (error) {
       console.error(error);

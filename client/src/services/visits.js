@@ -1,10 +1,15 @@
 import connexion from "./connexion";
 
-const getAllVisitsWithCommercialId = async (sortType, direction) => {
+const getAllVisitsWithCommercialId = async (
+  resultNb,
+  currentPage,
+  sortType,
+  direction
+) => {
   try {
-    let url = "/visits";
+    let url = `/visits?resultNb=${resultNb}&currentPage=${currentPage}`;
     if (sortType && direction)
-      url += `?sort=${sortType}&direction=${direction}`;
+      url += `&sort=${sortType}&direction=${direction}`;
     const response = await connexion.get(url);
     return response.data;
   } catch (error) {

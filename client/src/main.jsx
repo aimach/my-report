@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <ReportList />,
         loader: () => {
-          return getAllVisitsWithCommercialId();
+          return getAllVisitsWithCommercialId(5, 1);
         },
       },
       {
