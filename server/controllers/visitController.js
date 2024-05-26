@@ -77,6 +77,9 @@ export const VisitController = {
   },
 
   createVisit: async (req, res) => {
+    // ajout de l'id du commercial à partir du JWT
+    req.body = { ...req.body, commercial: req.user.commercialId };
+
     try {
       const newVisit = new Visit(req.body);
       const savedVisit = await newVisit.save();

@@ -1,14 +1,15 @@
-import { Typography, Container, TextField } from "@mui/material";
+import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import SelectInput from "../components/SelectInput";
+import DisplayClientInfo from "../components/DisplayClientInfo";
+import DateSelect from "../components/DatePicker";
+import { Typography, Container, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
-import SelectInput from "../components/SelectInput";
-import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
-import DisplayClientInfo from "../components/DisplayClientInfo";
-import DateSelect from "../components/DatePicker";
+import { createVisit } from "../services/visits";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -25,6 +26,7 @@ function CreateReport() {
   const [articleNb, setArticleNb] = useState(0);
   const [sales, setSales] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [reportContent, setReportContent] = useState("");
 
   const handleArticleNb = (articleNb) => {
     setArticleNb(articleNb);
@@ -33,6 +35,22 @@ function CreateReport() {
     );
     const totalPrice = selectedArticle.price * articleNb;
     setSales(totalPrice);
+  };
+
+  const submitVisitForm = async (event) => {
+    event.preventDefault();
+    const body = {
+      client: selectedClientId,
+      date: selectedDate,
+      report_content: reportContent,
+      article: selectedArticleId,
+      article_nb: articleNb,
+      sales,
+    };
+    const isCreated = await createVisit(body);
+    if (isCreated) {
+      console.log("ça a bien été créé !");
+    }
   };
 
   return (
@@ -52,7 +70,13 @@ function CreateReport() {
                   onChangeFunction={setSelectedClientId}
                   selectedItem={selectedClientId}
                 />
-                <DisplayClientInfo clientId={selectedClientId} />
+                <DisplayClientInfo
+                  client={
+                    clients.filter(
+                      (client) => client._id === selectedClientId
+                    )[0]
+                  }
+                />
               </Item>
             </Grid>
             <Grid xs={4}>
@@ -75,8 +99,8 @@ function CreateReport() {
                   fullWidth
                   multiline
                   minRows={10}
-                  onChange={(event) => console.log(event.target.value)}
-                  value=""
+                  onChange={(event) => setReportContent(event.target.value)}
+                  value={reportContent}
                 />
               </Item>
             </Grid>
@@ -121,6 +145,9 @@ function CreateReport() {
             </Grid>
           </Grid>
         </Box>
+        <Button variant="contained" onClick={submitVisitForm}>
+          Créer le compte rendu
+        </Button>
       </Container>
     </div>
   );

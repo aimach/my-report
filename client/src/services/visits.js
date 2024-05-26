@@ -13,6 +13,19 @@ const getAllVisitsWithCommercialId = async (sortType, direction) => {
   }
 };
 
+const createVisit = async (body) => {
+  try {
+    let url = "/visits";
+    await connexion.post(url, body).then((res) => {
+      console.log(res);
+      return true;
+    });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 const deleteVisit = async (visitId) => {
   try {
     await connexion.delete(`/visits/${visitId}`);
@@ -21,4 +34,4 @@ const deleteVisit = async (visitId) => {
   }
 };
 
-export { getAllVisitsWithCommercialId, deleteVisit };
+export { getAllVisitsWithCommercialId, createVisit, deleteVisit };

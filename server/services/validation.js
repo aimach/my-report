@@ -146,17 +146,15 @@ const dataValidation = {
 
   visit: async (req, res, next) => {
     const visitSchema = Joi.object({
-      commercial: Joi.string().required().messages({
+      commercial: Joi.string().messages({
         "string.base": "Le champ commercial doit être une chaîne de caractères",
-        "any.required": "Le champ commercial ne peut être vide",
       }),
-      client: Joi.string().required().messages({
+      client: Joi.string().messages({
         "string.base": "Le champ client doit être une chaîne de caractères",
         "any.required": "Le champ client ne peut être vide",
       }),
-      date: Joi.string().email().required().messages({
+      date: Joi.string().required().messages({
         "string.base": "Le mail doit être une chaîne de caractères",
-        "string.email": "Le champ doit être de type email",
         "any.required": "Le champ mail ne peut être vide",
       }),
       report_content: Joi.string().messages({
@@ -164,9 +162,10 @@ const dataValidation = {
           "Le champ report_content doit être une chaîne de caractères",
         "any.required": "Le champ report_content ne peut être vide",
       }),
-      article: Joi.boolean().required().messages({
-        "string.base": "Le champ article doit être une chaîne de caractères",
-        "any.required": "Le champ article ne peut être vide",
+      article: Joi.string().required().messages({
+        "string.base":
+          "Le champ report_content doit être une chaîne de caractères",
+        "any.required": "Le champ report_content ne peut être vide",
       }),
       article_nb: Joi.number().positive().required().messages({
         "number.base": "Le champ article_nb doit être un nombre",
