@@ -52,7 +52,7 @@ export const AuthController = {
       res.cookie("auth", token, { httpOnly: true }).status(200).json({
         id: commercial._id,
         mail: commercial.mail,
-        role: commercial.is_director,
+        is_director: commercial.is_director,
       });
     } catch (error) {
       console.error(error);

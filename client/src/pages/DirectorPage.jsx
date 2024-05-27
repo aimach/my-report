@@ -2,16 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { deleteVisit, getAllVisitsWithCommercialId } from "../services/visits";
 import connexion from "../services/connexion";
 
-import { TableSortLabel, Typography } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import VisitRow from "../components/VisitRow";
-import PaginationComponent from "../components/PaginationComponent";
+import { TableSortLabel, Typography, Container } from "@mui/material";
+
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 
@@ -27,11 +19,30 @@ function DirectorPage() {
   }, [profile, navigate]);
 
   return (
-    <div>
-      <Typography variant="h4" color="text.primary">
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        pb: { xs: 8, sm: 12 },
+      }}
+    >
+      <Typography
+        variant="h2"
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignSelf: "center",
+          textAlign: "center",
+          fontSize: "clamp(3.5rem, 10vw, 4rem)",
+          pb: { xs: 8, sm: 8 },
+          fontWeight: 500,
+        }}
+        color="primary"
+      >
         Dashboard
       </Typography>
-    </div>
+    </Container>
   );
 }
 

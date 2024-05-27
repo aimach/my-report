@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
       }
     };
     getProfile();
-  }, []);
+  }, [navigate]);
 
   const logout = () => {
     removeAuthCookie();

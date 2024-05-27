@@ -1,4 +1,12 @@
+import Commercial from "../models/commercial.js";
 import Visit from "../models/visit.js";
+import {
+  findPopulatedVisitWithSkipAndLimit,
+  getAllSales,
+  getCountVisits,
+  getSalesPerCommercial,
+  sortVisits,
+} from "../services/utils.js";
 
 export const VisitController = {
   getVisits: async (req, res) => {
@@ -13,51 +21,15 @@ export const VisitController = {
     }
 
     try {
-      let visits = await Visit.find({
-        commercial: req.user.commercialId,
-      })
-        .populate([
-          { path: "commercial" },
-          { path: "client" },
-          { path: "article" },
-        ])
-        .sort(sort)
-        .skip(parseInt(resultNb, 10) * (parseInt(currentPage, 10) - 1))
-        .limit(parseInt(resultNb, 10))
-        .exec();
+      let visits = await findPopulatedVisitWithSkipAndLimit(
+        req.user.commercialId,
+        sort,
+        resultNb,
+        currentPage
+      );
 
-      if (req.query.sort === "client" && req.query.direction === "asc") {
-        visits = visits.sort((a, b) => {
-          if (a.client.lastname < b.client.lastname) return -1;
-          if (a.client.lastname > b.client.lastname) return 1;
-          return 0;
-        });
-      } else if (
-        req.query.sort === "client" &&
-        req.query.direction === "desc"
-      ) {
-        visits = visits.sort((a, b) => {
-          if (a.client.lastname > b.client.lastname) return -1;
-          if (a.client.lastname < b.client.lastname) return 1;
-          return 0;
-        });
-      }
-
-      if (req.query.sort === "article" && req.query.direction === "asc") {
-        visits = visits.sort((a, b) => {
-          if (a.article.name < b.article.name) return -1;
-          if (a.article.name > b.article.name) return 1;
-          return 0;
-        });
-      } else if (
-        req.query.sort === "article" &&
-        req.query.direction === "desc"
-      ) {
-        visits = visits.sort((a, b) => {
-          if (a.article.name > b.article.name) return -1;
-          if (a.article.name < b.article.name) return 1;
-          return 0;
-        });
+      if (req.query.sort && req.query.direction) {
+        sortVisits(req.query.sort, req.query.direction, visits);
       }
 
       res.send(visits).status(200);
@@ -70,18 +42,24 @@ export const VisitController = {
   getOneVisit: async (req, res) => {
     const { id } = req.params;
     try {
-      if (id === "count") {
-        let count = await Visit.countDocuments({
-          commercial: req.user.commercialId,
-        });
-        res.send({ count }).status(200);
-      } else {
-        let visit = await Visit.findById(id).exec();
-        if (!visit) {
-          res.send("Visite non trouvée").status(404);
-        } else {
-          res.send(visit).status(200);
-        }
+      switch (id) {
+        case "count":
+          let count = await getCountVisits(req.user.commercialId);
+          res.send({ count }).status(200);
+          break;
+        case "stat":
+          const allSalesPerCommercial = await getAllSales(req.query.type);
+          res.send(allSalesPerCommercial).status(200);
+
+          break;
+        default:
+          let visit = await Visit.findById(id).exec();
+          if (!visit) {
+            res.send("Visite non trouvée").status(404);
+          } else {
+            res.send(visit).status(200);
+          }
+          break;
       }
     } catch (error) {
       console.error(error);
