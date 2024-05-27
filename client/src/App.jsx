@@ -8,13 +8,13 @@ import { Container } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { fr } from "date-fns/locale/fr";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
         <CssBaseline />
-
         <div className="layout">
           <Header />
           <Box
@@ -43,7 +43,7 @@ function App() {
           </Box>
         </div>
       </LocalizationProvider>
-    </>
+    </AuthProvider>
   );
 }
 

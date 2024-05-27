@@ -6,7 +6,6 @@ import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
 import CreateReport from "./pages/CreateReport.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
-import { AuthProvider } from "./context/authContext.jsx";
 import { getAllVisitsWithCommercialId } from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
 
@@ -56,8 +55,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
