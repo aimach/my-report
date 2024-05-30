@@ -2,6 +2,20 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { Container, Typography } from "@mui/material";
 
 export default function BarChartComponent({ series, result, index }) {
+  const monthLabels = [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre",
+  ];
   return (
     <Container
       sx={{
@@ -20,20 +34,7 @@ export default function BarChartComponent({ series, result, index }) {
         borderRadius={7}
         xAxis={[
           {
-            data: [
-              "Janvier",
-              "Février",
-              "Mars",
-              "Avril",
-              "Mai",
-              "Juin",
-              "Juillet",
-              "Août",
-              "Septembre",
-              "Octobre",
-              "Novembre",
-              "Décembre",
-            ],
+            data: monthLabels,
             scaleType: "band",
           },
         ]}
