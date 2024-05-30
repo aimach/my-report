@@ -20,6 +20,7 @@ const visitSchema = mongoose.Schema({
   },
   article_nb: { type: Number, required: true },
   sales: { type: Number, require: true },
+  forecast_nb: { type: Number },
 });
 
 const Visit = mongoose.model("Visit", visitSchema);
