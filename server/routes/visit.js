@@ -9,7 +9,7 @@ visitRoutes.use(checkCredentials);
 
 visitRoutes.get("/", VisitController.getVisits);
 
-visitRoutes.get("/:id", VisitController.getOneVisit);
+visitRoutes.get("/:id", VisitController.getOneVisitOrStats);
 
 visitRoutes.post("/", dataValidation.visit, VisitController.createVisit);
 

@@ -5,10 +5,10 @@ import jwt from "jsonwebtoken";
 export const AuthController = {
   register: async (req, res) => {
     try {
-      const hashedPassword = await hash(req.body.password, 10);
+      const hashedPassword = await hash(req.body.password, 10); // on hash le mot de passe
       const newCommercial = new Commercial({
         ...req.body,
-        password: hashedPassword,
+        password: hashedPassword, // on stocke le mdp hashé dans le body
       });
       await newCommercial.save();
       res.status(201).send("Nouveau commercial enregistré !");
@@ -49,6 +49,7 @@ export const AuthController = {
           expiresIn: "24h",
         }
       );
+      // stockage du token dans les cookies de la requête
       res.cookie("auth", token, { httpOnly: true }).status(200).json({
         id: commercial._id,
         mail: commercial.mail,
@@ -62,7 +63,7 @@ export const AuthController = {
 
   getProfile: async (req, res) => {
     const commercial = await Commercial.findOne({
-      _id: req.user.commercialId,
+      _id: req.user.commercialId, // ici on utilise l'id de l'utilisateur qui était dans le JWT (et transformé en req.user)
     }).select("-password");
     if (commercial) {
       res.status(200).send(commercial);
@@ -74,6 +75,7 @@ export const AuthController = {
   logout: async (req, res) => {
     res.clearCookie("auth");
     if (req.cookies.auth) {
+      // si la suppression ne fonctionne pas
       res.status(500).send("Erreur serveur");
     } else {
       res.sendStatus(200);

@@ -7,6 +7,7 @@ import Commercial from "../models/commercial.js";
 import Visit from "../models/visit.js";
 
 const uri = process.env.ATLAS_URI || "";
+// ci-dessous on définit le nombre d'entrées pour chacune des entités
 const articleNb = 10;
 const clientNb = 10;
 const commercialNb = 5;
@@ -45,6 +46,14 @@ const generateClients = (num) => {
 
 const generateCommercials = async (num) => {
   const commercials = [];
+  // on créé un profil admin
+  commercials.push({
+    firstname: "Admin",
+    lastname: "Ladministrateur",
+    mail: "admin@my-report.fr",
+    password: await hash("admin", 10),
+    is_director: true,
+  });
 
   while (commercials.length < num) {
     const firstname = faker.person.firstName();
@@ -55,7 +64,7 @@ const generateCommercials = async (num) => {
       provider: "my-report.fr",
     });
     const password = await hash(firstname + lastname, 10);
-    const is_director = commercials.length === 0; // un seul sera directeur commercial
+    const is_director = false;
     // la condition suivante permet d'éviter d'avoir des doublons dans le tableau
     if (
       commercials.filter((commercial) => commercial.mail === mail).length === 0
@@ -71,19 +80,19 @@ const generateVisits = async (num, articles, clients, commercials) => {
 
   while (visits.length < num) {
     const commercial =
-      commercials[faker.number.int({ min: 0, max: commercialNb - 1 })];
-    const client = clients[faker.number.int({ min: 0, max: clientNb - 1 })];
+      commercials[faker.number.int({ min: 0, max: commercialNb - 1 })]; // on insère un commercial au hasard
+    const client = clients[faker.number.int({ min: 0, max: clientNb - 1 })]; // on insère un client au hasard
     const date = faker.date.between({
       from: "2022-01-01T00:00:00.000Z",
       to: "2024-08-01T00:00:00.000Z",
-    });
-    const report_content = faker.lorem.text();
-    const article = articles[faker.number.int({ min: 0, max: articleNb - 1 })];
-    const isFuture = date > new Date();
-    const article_nb = isFuture ? 0 : faker.number.int({ min: 5, max: 100 });
+    }); // pour avoir des données suffisamment proches
+    const report_content = faker.lorem.paragraph({ min: 1, max: 3 });
+    const article = articles[faker.number.int({ min: 0, max: articleNb - 1 })]; // on insère un article au hasard
+    const article_nb = faker.number.int({ min: 5, max: 100 });
     const sales = article.price * article_nb;
+    const isFuture = date > new Date();
     const forecast_nb = faker.number.int({
-      min: isFuture ? 0 : article_nb - 10,
+      min: isFuture ? 0 : article_nb - 10, // si la visite est dans le futur, il n'y a pas d'articles prévisionnels
       max: article_nb + 10,
     });
     const forecast_sales = article.price * forecast_nb;
@@ -111,7 +120,7 @@ const seed = async () => {
     await Client.insertMany(clients);
     await Commercial.insertMany(commercials);
 
-    // une fois insérées, récupération des données pour pouvoir sélectionner un élément random et l'insérer dans la visite
+    // une fois les données ci-dessus insérées, on les récupères toutes pour les données à la fonction generateVisits qui en sélectionnera un aléatoire pour chaque entrée
     const allArticles = await Article.find();
     const allClients = await Client.find();
     const allCommercials = await Commercial.find();
