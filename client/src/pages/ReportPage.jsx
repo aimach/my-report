@@ -346,16 +346,18 @@ function ReportPage() {
                 </Paper>
               </Grid>
             </Grid>
-            <Button
-              variant="contained"
-              color="success"
-              type="submit"
-              sx={{ mt: 5 }}
-            >
-              {id === "new"
-                ? "Créer le compte rendu"
-                : "Modifier le compte rendu"}
-            </Button>
+            {action !== "see" && (
+              <Button
+                variant="contained"
+                color="success"
+                type="submit"
+                sx={{ mt: 5 }}
+              >
+                {id === "new"
+                  ? "Créer le compte rendu"
+                  : "Modifier le compte rendu"}
+              </Button>
+            )}
           </Box>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
