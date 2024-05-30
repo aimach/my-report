@@ -7,11 +7,8 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
-import Drawer from "@mui/material/Drawer";
-import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/img/my-report-logo.svg";
 
 const logoStyle = {
@@ -21,14 +18,15 @@ const logoStyle = {
 };
 
 function Header() {
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   let location = useLocation();
-  const { connected, profile, logout } = useContext(AuthContext);
+  const { connected, logout } = useContext(AuthContext);
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
+  const menuLabels = [
+    { title: "Gérer mes comptes rendus", link: "/" },
+    { title: "Créer un compte rendu", link: "/visit/new/new" },
+    { title: "Statistiques", link: "/dashboard" },
+  ];
 
   return (
     <div>
@@ -67,47 +65,34 @@ function Header() {
               }}
             >
               <Link to="/">
-                <img src={logo} style={logoStyle} alt="logo of my report" />
+                <img src={logo} style={logoStyle} alt="logo of My Report" />
               </Link>
               {connected && (
                 <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                  <MenuItem
-                    onClick={() => navigate("/")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      Gérer mes comptes rendus
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => navigate("/visit/new/new")}
-                    sx={{ py: "6px", px: "12px" }}
-                  >
-                    <Typography variant="body2" color="text.primary">
-                      Créer un compte-rendu
-                    </Typography>
-                  </MenuItem>
-                  {profile.is_director && (
-                    <MenuItem
-                      onClick={() => navigate("/dashboard")}
-                      sx={{ py: "6px", px: "12px" }}
-                    >
-                      <Typography variant="body2" color="text.primary">
-                        Statistiques
-                      </Typography>
-                    </MenuItem>
-                  )}
+                  {menuLabels.map((label, index) => {
+                    return (
+                      <MenuItem
+                        onClick={() => navigate(label.link)}
+                        sx={{ py: "6px", px: "12px" }}
+                        key={index}
+                      >
+                        <Typography variant="body2" color="text.primary">
+                          {label.title}
+                        </Typography>
+                      </MenuItem>
+                    );
+                  })}
                 </Box>
               )}
             </Box>
-            {connected && (
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  gap: 0.5,
-                  alignItems: "center",
-                }}
-              >
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                gap: 0.5,
+                alignItems: "center",
+              }}
+            >
+              {connected && ( // si l'utilisateur est connecté, afficher le bouton "Se déconnecter"
                 <Button
                   color="primary"
                   variant="contained"
@@ -118,75 +103,19 @@ function Header() {
                 >
                   Se déconnecter
                 </Button>
-              </Box>
-            )}
-            {!connected && location.pathname !== "/login" && (
-              <Box
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  gap: 0.5,
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  color="primary"
-                  variant="contained"
-                  size="small"
-                  component="a"
-                  href="/login"
-                >
-                  Se connecter
-                </Button>
-              </Box>
-            )}
-
-            <Box sx={{ display: { sm: "", md: "none" } }}>
-              <Button
-                variant="text"
-                color="primary"
-                aria-label="menu"
-                onClick={toggleDrawer(true)}
-                sx={{ minWidth: "30px", p: "4px" }}
-              >
-                <MenuIcon />
-              </Button>
-              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-                <Box
-                  sx={{
-                    minWidth: "60dvw",
-                    p: 2,
-                    backgroundColor: "background.paper",
-                    flexGrow: 1,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "end",
-                      flexGrow: 1,
-                    }}
-                  ></Box>
-                  <MenuItem onClick={() => navigate("/")}>
-                    Gérer mes comptes rendus
-                  </MenuItem>
-                  <MenuItem onClick={() => navigate("/create")}>
-                    Créer un compte rendu
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      component="a"
-                      href="/login"
-                      sx={{ width: "100%" }}
-                    >
-                      Se connecter
-                    </Button>
-                  </MenuItem>
-                </Box>
-              </Drawer>
+              )}
+              {!connected &&
+                location.pathname !== "/login" && ( // si l'utilisateur n'est pas connecté et qu'il n'est pas sur la page login, afficher le bouton "Se connecter"
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    component="a"
+                    href="/login"
+                  >
+                    Se connecter
+                  </Button>
+                )}
             </Box>
           </Toolbar>
         </Container>
