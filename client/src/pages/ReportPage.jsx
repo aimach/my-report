@@ -5,21 +5,12 @@ import connexion from "../services/connexion";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
 import DateSelect from "../components/DatePicker";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-import {
-  Typography,
-  Container,
-  TextField,
-  Button,
-  Snackbar,
-  Slide,
-  Alert,
-} from "@mui/material";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Unstable_Grid2";
 import SnackBarComponent from "../components/SnackBarComponent";
+import { Typography, Container, TextField, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Unstable_Grid2";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import PaperComponent from "../components/PaperComponent";
 
 function ReportPage() {
   const { clients, articles } = useLoaderData();
@@ -46,13 +37,13 @@ function ReportPage() {
         forecast_nb: 0,
         forecast_sales: 0,
       };
-      setVisit(newVisit);
+      setVisit(newVisit); // on set la visite à vide
     } else {
       // sinon on récupère les informations de la visite
       const getVisitById = async (visitId) => {
         try {
           const response = await connexion.get(`/visits/${visitId}`);
-          setVisit(response.data);
+          setVisit(response.data); // on set la visite avec les données de la BDD
         } catch (error) {
           console.error(error);
         }
@@ -63,13 +54,16 @@ function ReportPage() {
 
   const handleArticleNb = (articleNb, fieldType) => {
     const [selectedArticle] = articles.filter(
+      // on récupère les infos de l'article sélectionné
       (article) => article._id === visit.article
     );
-    const totalPrice = selectedArticle.price * articleNb;
+    const totalPrice = selectedArticle.price * articleNb; // on calcule le montant total en fonction du nombre et du prix
     if (fieldType === "current") {
+      // si c'est l'input de la visite en cours, on met à jour les champs article_nb et sales
       setVisit({ ...visit, article_nb: articleNb, sales: totalPrice });
     } else if (fieldType === "forecast") {
       setVisit({
+        // si c'est l'input de la future visite, on met à jour les champs article_nb et sales
         ...visit,
         forecast_nb: articleNb,
         forecast_sales: totalPrice,
@@ -80,24 +74,28 @@ function ReportPage() {
   const submitVisitForm = async (event) => {
     event.preventDefault();
     const forecast = {
-      ...visit,
-      date: forecastDate,
-      report_content: "",
-      article_nb: visit.forecast_nb,
-      sales: visit.forecast_sales,
-      forecast_nb: 0,
-      forecast_sales: 0,
+      // on créé un body avec le prévisionnel pour la création d'une nouvelle visite
+      ...visit, // client et articles restent les mêmes
+      date: forecastDate, // date prévisionnelle choisie
+      report_content: "", // le compte rendu est vide
+      article_nb: visit.forecast_nb, // le nombre d'articles sera le prévisionnel de la visite en cours
+      sales: visit.forecast_sales, // le montant sera le prévisionnel de la visite en cours
+      forecast_nb: 0, // il n'y a pas encore de prévisionnel
+      forecast_sales: 0, // il n'y a pas encore de prévisionnel
     };
     const isCreatedOrUpdated =
       id === "new"
-        ? await createVisit(visit, forecast)
-        : await updateVisit(visit);
+        ? await createVisit(visit, forecast) // si c'est une page de Création de CR, on créé une visite
+        : await updateVisit(visit); // si c'est une page de Modification de CR, on met à jour la visite
     if (isCreatedOrUpdated) {
-      setAlert({ ...alert, open: true });
+      // si les fonctions on renvoyé "true" (la requête a fonctionné)
+      setAlert({ ...alert, open: true }); // on affiche une alerte
       setTimeout(() => {
+        // on revient à la page d'accueil
         navigate("/");
-      }, 2000);
+      }, 2000); // 2s
     } else {
+      // si ça n'a pas fonctionné, on affiche une alerte d'erreur
       setAlert({
         open: true,
         message: "Oups ! Le compte rendu n'a pas pu être enregistré",
@@ -116,7 +114,7 @@ function ReportPage() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        {action !== "see" && (
+        {action !== "see" && ( // si c'est une création ou modification, on affiche un titre
           <Typography
             variant="h2"
             sx={{
@@ -140,14 +138,7 @@ function ReportPage() {
           <Box sx={{ flexGrow: 1 }} component="form" onSubmit={submitVisitForm}>
             <Grid container spacing={2}>
               <Grid xs={7.5}>
-                <Paper
-                  sx={{
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    textAlign: "left",
-                    height: "370px",
-                  }}
-                >
+                <PaperComponent height="370px">
                   <SelectInput
                     label="Client rencontré"
                     list={clients}
@@ -162,33 +153,20 @@ function ReportPage() {
                       clients.filter((client) => client._id === visit.client)[0]
                     }
                   />
-                </Paper>
+                </PaperComponent>
               </Grid>
               <Grid xs={4.5}>
-                <Paper
-                  sx={{
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    textAlign: "left",
-                    height: "370px",
-                  }}
-                >
+                <PaperComponent height="370px">
                   <DateSelect
                     selectedDate={visit.date}
                     visit={visit}
                     setVisit={setVisit}
                     action={action}
                   />
-                </Paper>
+                </PaperComponent>
               </Grid>
               <Grid xs={12}>
-                <Paper
-                  sx={{
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    textAlign: "left",
-                  }}
-                >
+                <PaperComponent height="">
                   <Typography
                     component="h2"
                     variant="h6"
@@ -213,16 +191,10 @@ function ReportPage() {
                     required
                     disabled={action === "see"}
                   />
-                </Paper>
+                </PaperComponent>
               </Grid>
               <Grid xs={12}>
-                <Paper
-                  sx={{
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    textAlign: "left",
-                  }}
-                >
+                <PaperComponent height="">
                   <Typography
                     component="h2"
                     variant="h6"
@@ -276,16 +248,10 @@ function ReportPage() {
                       />
                     </Grid>
                   </Grid>
-                </Paper>
+                </PaperComponent>
               </Grid>
               <Grid xs={12}>
-                <Paper
-                  sx={{
-                    backgroundColor: "#fff",
-                    padding: 3,
-                    textAlign: "left",
-                  }}
-                >
+                <PaperComponent height="">
                   <Typography
                     component="h2"
                     variant="h6"
@@ -344,7 +310,7 @@ function ReportPage() {
                       />
                     </Grid>
                   </Grid>
-                </Paper>
+                </PaperComponent>
               </Grid>
             </Grid>
             {action !== "see" && (
