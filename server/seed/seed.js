@@ -79,12 +79,14 @@ const generateVisits = async (num, articles, clients, commercials) => {
     });
     const report_content = faker.lorem.text();
     const article = articles[faker.number.int({ min: 0, max: articleNb - 1 })];
-    const article_nb = faker.number.int({ min: 5, max: 100 });
+    const isFuture = date > new Date();
+    const article_nb = isFuture ? 0 : faker.number.int({ min: 5, max: 100 });
     const sales = article.price * article_nb;
     const forecast_nb = faker.number.int({
-      min: article_nb - 10,
+      min: isFuture ? 0 : article_nb - 10,
       max: article_nb + 10,
     });
+    const forecast_sales = article.price * forecast_nb;
     visits.push({
       commercial,
       client,
@@ -94,6 +96,7 @@ const generateVisits = async (num, articles, clients, commercials) => {
       article_nb,
       sales,
       forecast_nb,
+      forecast_sales,
     });
   }
   return visits;

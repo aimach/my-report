@@ -183,6 +183,16 @@ const dataValidation = {
         "number.positive": "Le champ sales ne peut pas être négatif",
         "any.required": "Le champ sales ne peut être vide",
       }),
+      forecast_nb: Joi.number().positive().required().messages({
+        "number.base": "Le champ forecast_nb doit être un nombre",
+        "number.positive": "Le champ forecast_nb ne peut pas être négatif",
+        "any.required": "Le champ forecast_nb ne peut être vide",
+      }),
+      forecast_sales: Joi.number().positive().required().messages({
+        "number.base": "Le champ forecast_sales doit être un nombre",
+        "number.positive": "Le champ forecast_sales ne peut pas être négatif",
+        "any.required": "Le champ forecast_sales ne peut être vide",
+      }),
     });
     const schemaValidation = visitSchema.validate(req.body);
     if (schemaValidation.error) {
