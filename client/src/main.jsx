@@ -6,7 +6,10 @@ import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
 import CreateReport from "./pages/CreateReport.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
-import { getAllVisitsWithCommercialId } from "./services/visits.js";
+import {
+  getAllVisitsWithCommercialId,
+  getVisitsForCharts,
+} from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
 
 import "./index.css";
@@ -40,6 +43,9 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <DirectorPage />,
+        loader: async () => {
+          return getVisitsForCharts();
+        },
       },
       {
         path: "login",
