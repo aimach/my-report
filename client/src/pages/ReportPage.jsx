@@ -4,7 +4,7 @@ import { createVisit, updateVisit } from "../services/visits";
 import connexion from "../services/connexion";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
-import DateSelect from "../components/DatePicker";
+import DateSelectComponent from "../components/DateSelectComponent";
 import SnackBarComponent from "../components/SnackBarComponent";
 import { Typography, Container, TextField, Button } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -157,7 +157,7 @@ function ReportPage() {
               </Grid>
               <Grid xs={4.5}>
                 <PaperComponent height="370px">
-                  <DateSelect
+                  <DateSelectComponent
                     selectedDate={visit.date}
                     visit={visit}
                     setVisit={setVisit}
