@@ -65,4 +65,5 @@ Features prévues :
   ```
 
 - Se connecter à l'application
-  Utiliser les identifiants de l'administrateur : (mail) admin@my-report.fr / (psw) admin
+
+Si la commande de seed a été lancée, utiliser les identifiants de l'administrateur pour consulter l'application : (mail) admin@my-report.fr / (psw) admin
