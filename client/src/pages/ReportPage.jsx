@@ -19,6 +19,7 @@ import {
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
+import SnackBarComponent from "../components/SnackBarComponent";
 
 function ReportPage() {
   const { clients, articles } = useLoaderData();
@@ -359,17 +360,7 @@ function ReportPage() {
               </Button>
             )}
           </Box>
-          <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={alert.open}
-            autoHideDuration={2000}
-            onClose={() => setAlert({ ...alert, open: false })}
-            TransitionComponent={Slide}
-          >
-            <Alert severity={alert.severity} sx={{ width: "100%" }}>
-              {alert.message}
-            </Alert>
-          </Snackbar>
+          <SnackBarComponent alert={alert} setAlert={setAlert} />
         </Container>
       </Container>
     )
