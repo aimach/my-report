@@ -40,13 +40,15 @@ const getSalesPerCommercial = async (commercial, type) => {
     ]);
   } else if (type === "monthly") {
     const firstVisit = await getFirstVisit();
-    const lastVisit = await getLastVisit();
     const allCommercialSales = [];
     let year = firstVisit[0].year;
-    while (year <= lastVisit[0].year) {
-      // on parcourt toutes les années de ventes
+    while (year <= new Date().getFullYear()) {
+      // tant que la date n'est pas supérieur à actuelle
+      let monthNb = 12; // les données sont à récupérée sur 12 mois
+      if (year === new Date().getFullYear()) monthNb = new Date().getMonth(); // si c'est lannée en cours, le nombre de mois est égal au mois actuel - 1
+
       let annualSales = [];
-      for (let i = 1; i <= 12; i++) {
+      for (let i = 1; i <= monthNb; i++) {
         // pour chacun des mois de l'année
         const sales = await Visit.aggregate([
           {
@@ -72,7 +74,7 @@ const getSalesPerCommercial = async (commercial, type) => {
             },
           },
         ]);
-        annualSales.push(sales);
+        annualSales.push(sales[0]);
       }
       allCommercialSales.push({
         commercial_firstname: commercial.firstname,
@@ -110,23 +112,12 @@ const getAllSalesMonthly = async () => {
 
 const getFirstVisit = async () => {
   return await Visit.aggregate([
+    { $sort: { date: 1 } },
+
     { $limit: 1 },
     {
       $project: {
         _id: 0,
-        year: { $year: "$date" }, // Extrait l'année de la date
-        month: { $month: "$date" }, // Extrait le mois de la date
-      },
-    },
-  ]);
-};
-
-const getLastVisit = async () => {
-  return await Visit.aggregate([
-    { $sort: { date: -1 } },
-    { $limit: 1 },
-    {
-      $project: {
         year: { $year: "$date" }, // Extrait l'année de la date
         month: { $month: "$date" }, // Extrait le mois de la date
       },
@@ -164,6 +155,35 @@ const sortVisits = (sortType, direction, visits) => {
   }
 };
 
+const formatAllSales = (allSalesPerCommercial) => {
+  const allCommercialsFormatedSales = []; // le tableau qu'on retourne à la fin
+  allSalesPerCommercial.map((commercial) => {
+    // pour chaque tableau qui regroupe les ventes annuelles d'un commercial
+    const commercialCharts = []; // on créé un tableau pour y stocker toutes les données du commercial
+    commercial.forEach((saleYear) => {
+      // pour chaque donnée annuelle du commercial
+      let dataForChart = []; // on créé un tableau pour y stocker toutes les données annuelle du commercial
+      saleYear.annualSales.forEach((monthlySale) => {
+        // pour chaque année
+        if (monthlySale === undefined) {
+          // si la BDD n'a renvoyé aucune donnée
+          dataForChart.push(0); // alors on met 0 pour le total de vente
+        } else {
+          dataForChart.push(monthlySale.total); // sinon, on stocke le total
+        }
+      });
+      commercialCharts.push({
+        year: saleYear.year,
+        data: dataForChart,
+        commercialFirstname: saleYear.commercial_firstname,
+        commercialLastName: saleYear.commercial_lastname,
+      }); // pour faciliter l'utilisation des données, le tableau est rempli des données formatées pour les graphiques avec l'année, la data à afficher et les informations du commercial
+    });
+    allCommercialsFormatedSales.push(commercialCharts); // on stocke toutes les données de tous les commerciaux dans un tableau qui sera renvoyé
+  });
+  return allCommercialsFormatedSales;
+};
+
 export {
   sortVisits,
   findPopulatedVisitWithSkipAndLimit,
@@ -171,4 +191,5 @@ export {
   getSalesPerCommercial,
   getAllSales,
   getAllSalesMonthly,
+  formatAllSales,
 };

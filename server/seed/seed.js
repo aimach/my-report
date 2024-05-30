@@ -73,7 +73,10 @@ const generateVisits = async (num, articles, clients, commercials) => {
     const commercial =
       commercials[faker.number.int({ min: 0, max: commercialNb - 1 })];
     const client = clients[faker.number.int({ min: 0, max: clientNb - 1 })];
-    const date = faker.date.anytime();
+    const date = faker.date.between({
+      from: "2022-01-01T00:00:00.000Z",
+      to: "2024-08-01T00:00:00.000Z",
+    });
     const report_content = faker.lorem.text();
     const article = articles[faker.number.int({ min: 0, max: articleNb - 1 })];
     const article_nb = faker.number.int({ min: 5, max: 100 });

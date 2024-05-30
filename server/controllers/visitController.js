@@ -2,6 +2,7 @@ import Commercial from "../models/commercial.js";
 import Visit from "../models/visit.js";
 import {
   findPopulatedVisitWithSkipAndLimit,
+  formatAllSales,
   getAllSales,
   getCountVisits,
   getSalesPerCommercial,
@@ -49,8 +50,10 @@ export const VisitController = {
           break;
         case "stat":
           const allSalesPerCommercial = await getAllSales(req.query.type);
-          res.send(allSalesPerCommercial).status(200);
-
+          const allSalesPerCommercialFormat = formatAllSales(
+            allSalesPerCommercial
+          );
+          res.send(allSalesPerCommercialFormat).status(200);
           break;
         default:
           let visit = await Visit.findById(id).exec();

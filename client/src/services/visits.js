@@ -53,11 +53,19 @@ const updateVisit = async (body) => {
 const deleteVisit = async (visitId) => {
   try {
     const response = await connexion.delete(`/visits/${visitId}`);
-    console.log(response);
     if (response.status === 200) return true;
   } catch (error) {
     console.error(error);
     return false;
+  }
+};
+
+const getVisitsForCharts = async () => {
+  try {
+    const response = await connexion.get(`/visits/stat?type=monthly`);
+    if (response.status === 200) return response.data;
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -67,4 +75,5 @@ export {
   createVisit,
   updateVisit,
   deleteVisit,
+  getVisitsForCharts,
 };
