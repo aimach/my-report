@@ -7,9 +7,9 @@ const getAllVisitsWithCommercialId = async (
   direction
 ) => {
   try {
-    let url = `/visits?resultNb=${resultNb}&currentPage=${currentPage}`;
+    let url = `/visits?resultNb=${resultNb}&currentPage=${currentPage}`; // l'url par défaut inclut la pagination
     if (sortType && direction)
-      url += `&sort=${sortType}&direction=${direction}`;
+      url += `&sort=${sortType}&direction=${direction}`; // si un tri et un sens sont donnés, ils sont ajoutés aux queries de l'url
     const response = await connexion.get(url);
     return response.data;
   } catch (error) {

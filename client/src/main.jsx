@@ -5,16 +5,16 @@ import App from "./App.jsx";
 import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
+import ReportPage from "./pages/ReportPage.jsx";
 import { getAllVisitsWithCommercialId } from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
+import { getAllArticles } from "./services/articles.js";
 
 import "./index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { getAllArticles } from "./services/articles.js";
-import ReportPage from "./pages/ReportPage.jsx";
 
 const router = createBrowserRouter([
   {
