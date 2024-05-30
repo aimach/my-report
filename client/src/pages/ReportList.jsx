@@ -137,7 +137,7 @@ function ReportList() {
                         <TableSortLabel
                           active={sortType === label.sortType}
                           direction={sortDirection}
-                          onClick={() => handleSortLabel(sortType)}
+                          onClick={() => handleSortLabel(label.sortType)}
                         >
                           {label.name}
                         </TableSortLabel>

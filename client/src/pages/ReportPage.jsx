@@ -274,7 +274,7 @@ function ReportPage() {
                         disablePast
                         value={forecastDate}
                         onChange={(newDate) => setForecastDate(newDate)}
-                        disabled={action === "modify"}
+                        disabled={action !== "new"}
                       />
                     </Grid>
                     <Grid xs={4}>
