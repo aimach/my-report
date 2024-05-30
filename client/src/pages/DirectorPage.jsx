@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-
-import { Typography, Container } from "@mui/material";
-
-import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 import SalesChart from "../components/SalesChart.jsx";
 import LineChartComponent from "../components/LineChartComponent.jsx";
 import connexion from "../services/connexion.js";
+import { Typography, Container, CircularProgress } from "@mui/material";
 
 function DirectorPage() {
   const { profile } = useContext(AuthContext);
@@ -14,7 +12,6 @@ function DirectorPage() {
 
   const [commercialStatsPerYer, setCommercialStatsPerYer] = useState([]);
   const [annualStats, setAnnualStats] = useState([]);
-
   const series = [];
 
   useEffect(() => {
@@ -25,11 +22,13 @@ function DirectorPage() {
   }, [profile]);
 
   useEffect(() => {
+    // on récupère les données pour afficher le graphique à barres et  on les stocke dans le state commercialStatsPerYer
     const getCommercialStatsPerYer = async () => {
       try {
         const response = await connexion.get(`/visits/stat?type=monthly`);
         if (response.status === 200) {
           response.data.forEach((chart) => {
+            // on formatte la donnée pour avoir dans le tableau une seule entrée par commercial
             const { commercialFirstname, commercialLastName } = chart[0];
             const serie = chart.map((item) => ({
               year: item.year,
@@ -43,7 +42,7 @@ function DirectorPage() {
         console.error(error);
       }
     };
-
+    // on récupère les données pour afficher les graphiques à points et on les stocke dans le state annualStates
     const getAnnualStats = async () => {
       try {
         const response = await connexion.get(`/visits/stat?type=all`);
@@ -80,7 +79,7 @@ function DirectorPage() {
       >
         Statistiques
       </Typography>
-      {commercialStatsPerYer.length && annualStats.length ? (
+      {commercialStatsPerYer.length && annualStats.length ? ( // si la donnée est accessible, on affiche les graphiques (sinon on affiche un loader)
         <Container maxWidth="xl">
           {annualStats && (
             <>
@@ -100,7 +99,7 @@ function DirectorPage() {
           )}
         </Container>
       ) : (
-        <p>Loading...</p>
+        <CircularProgress />
       )}
     </Container>
   );
