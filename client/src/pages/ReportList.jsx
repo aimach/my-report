@@ -8,9 +8,7 @@ import {
   TableSortLabel,
   Typography,
   Container,
-  Snackbar,
-  Slide,
-  Alert,
+  CircularProgress,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,19 +17,34 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import SnackBarComponent from "../components/SnackBarComponent";
 
 function ReportList() {
+  const resultNb = 10; // on définit le nombre de visites par page
   const [visits, setVisits] = useState([]);
   const [sortType, setSortType] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [resultNb, setResultNb] = useState(10);
   const [allVisitsNb, setAllVisitsNb] = useState(0);
   const [alert, setAlert] = useState({
     open: false,
     message: "Bien supprimé !",
     severity: "success",
   });
+  const columnLabels = [
+    { name: "Statut", type: "sorted", sortType: "date", align: "center" },
+    { name: "Date", type: "notSorted", sortType: null, align: "center" },
+    { name: "Client", type: "sorted", sortType: "client", align: "center" },
+    {
+      name: "Article",
+      type: "sorted",
+      sortType: "article",
+      align: "center",
+    },
+    { name: "Nombre", type: "notSorted", sortType: null, align: "right" },
+    { name: "Montant", type: "sorted", sortType: "sales", align: "right" },
+    { name: "Actions", type: "notSorted", sortType: null, align: "center" },
+  ];
 
   useEffect(() => {
     const getVisitsNb = async () => {
@@ -118,47 +131,23 @@ function ReportList() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">
-                    <TableSortLabel
-                      active={sortType === "date"}
-                      direction={sortDirection}
-                      onClick={() => handleSortLabel("date")}
-                    >
-                      Statut
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="center">Date</TableCell>
-
-                  <TableCell align="center">
-                    <TableSortLabel
-                      active={sortType === "client"}
-                      direction={sortDirection}
-                      onClick={() => handleSortLabel("client")}
-                    >
-                      Client
-                    </TableSortLabel>
-                  </TableCell>
-
-                  <TableCell align="center">
-                    <TableSortLabel
-                      active={sortType === "article"}
-                      direction={sortDirection}
-                      onClick={() => handleSortLabel("article")}
-                    >
-                      Article
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="right">Nombre</TableCell>
-                  <TableCell align="right">
-                    <TableSortLabel
-                      active={sortType === "sales"}
-                      direction={sortDirection}
-                      onClick={() => handleSortLabel("sales")}
-                    >
-                      Montant
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  {columnLabels.map((label, index) =>
+                    label.type === "sorted" ? (
+                      <TableCell align={label.align} key={index}>
+                        <TableSortLabel
+                          active={sortType === label.sortType}
+                          direction={sortDirection}
+                          onClick={() => handleSortLabel(sortType)}
+                        >
+                          {label.name}
+                        </TableSortLabel>
+                      </TableCell>
+                    ) : (
+                      <TableCell key={index} align={label.align}>
+                        {label.name}
+                      </TableCell>
+                    )
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -181,19 +170,9 @@ function ReportList() {
           )}
         </>
       ) : (
-        <div>Pas encore de visites</div>
+        <CircularProgress />
       )}
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={alert.open}
-        autoHideDuration={2000}
-        onClose={() => setAlert({ ...alert, open: false })}
-        TransitionComponent={Slide}
-      >
-        <Alert severity={alert.severity} sx={{ width: "100%" }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
     </Container>
   );
 }
