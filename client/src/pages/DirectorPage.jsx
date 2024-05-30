@@ -29,35 +29,33 @@ function DirectorPage() {
   }, [profile]);
 
   return (
-    chartStats && (
-      <Container
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        pb: { xs: 8, sm: 12 },
+      }}
+    >
+      <Typography
+        variant="h2"
         sx={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          pb: { xs: 8, sm: 12 },
+          flexDirection: { xs: "column", md: "row" },
+          alignSelf: "center",
+          textAlign: "center",
+          fontSize: "clamp(3.5rem, 10vw, 4rem)",
+          pb: { xs: 8, sm: 8 },
+          fontWeight: 500,
         }}
+        color="primary"
       >
-        <Typography
-          variant="h2"
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignSelf: "center",
-            textAlign: "center",
-            fontSize: "clamp(3.5rem, 10vw, 4rem)",
-            pb: { xs: 8, sm: 8 },
-            fontWeight: 500,
-          }}
-          color="primary"
-        >
-          Dashboard
-        </Typography>
-        <Container maxWidth="xl">
-          <SalesChart series={series} />
-        </Container>
+        Dashboard
+      </Typography>
+      <Container maxWidth="xl">
+        {chartStats && <SalesChart series={series} />}
       </Container>
-    )
+    </Container>
   );
 }
 

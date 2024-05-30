@@ -1,7 +1,6 @@
 import BarChartComponent from "./BarChartComponent";
 
 export default function SalesChart({ series }) {
-  console.log(series);
   const yearNb = series[0].serie.length;
   let components = [];
   for (let i = 0; i < yearNb; i++) {

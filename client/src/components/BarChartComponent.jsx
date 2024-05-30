@@ -10,10 +10,10 @@ export default function BarChartComponent({ series, result, index }) {
         alignItems: "center",
         pb: { xs: 8, sm: 12 },
       }}
+      key={index}
     >
       <Typography variant="h5">Année {series[0].serie[index].year}</Typography>
       <BarChart
-        key={index}
         series={result}
         height={300}
         grid={{ horizontal: true }}
