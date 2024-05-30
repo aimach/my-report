@@ -1,4 +1,4 @@
-# My-Report, a MERN Full Stack Application
+# My-Report, une application MERN
 
 ## Description
 
@@ -19,3 +19,50 @@ Features prévues :
   - Prévision du nombre d’articles qui seront vendus par le client jusqu’à la prochaine visite
   - Prévision du chiffre d’affaires qui sera généré par ces ventes
 - Une page listant les comptes rendus et permettant de les modifier ou les supprimer
+
+## Installation
+
+- Cloner dépôt Github
+
+  ```javascript
+   git clone git@github.com:aimach/my-report.git
+   cd my-report
+  ```
+
+- Installer les dépendances
+
+  ```javascript
+   cd /server
+   npm i
+  ```
+
+  ```javascript
+   cd /client
+   npm i
+  ```
+
+- Configurer les variables d'environnement
+
+  Configurer les fichiers server/config.env.sample et client/.env à partir des samples
+
+- Lancer la commande de seed
+
+  ```javascript
+   cd /server
+   npm run seed
+  ```
+
+- Démarrer l'application
+
+  ```javascript
+   cd /client
+   npm run dev
+  ```
+
+  ```javascript
+  cd /server
+  npm run server
+  ```
+
+- Se connecter à l'application
+  Utiliser les identifiants de l'administrateur : (mail) admin@my-report.fr / (psw) admin
