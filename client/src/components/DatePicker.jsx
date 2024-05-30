@@ -10,7 +10,6 @@ export default function DateSelect({ selectedDate, visit, setVisit }) {
       <DateCalendar
         value={selectedDate}
         onChange={(newValue) => setVisit({ ...visit, date: newValue })}
-        disablePast
         required
         views={["month", "day"]}
       />
