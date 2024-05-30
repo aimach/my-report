@@ -1,9 +1,10 @@
 import BarChartComponent from "./BarChartComponent";
 
 export default function SalesChart({ series }) {
-  const yearNb = series[0].serie.length;
+  const yearNb = series[0].serie.length; // on récupère le nombres d'années
   let components = [];
   for (let i = 0; i < yearNb; i++) {
+    // pour chaque année, on formatte la donnée pour avoir un objet {data, label} puis on ajout le composant BarChart
     const result = [];
     series
       .map((element) => {
@@ -18,5 +19,5 @@ export default function SalesChart({ series }) {
     );
   }
 
-  return <>{components.reverse()}</>;
+  return <>{components.reverse()}</>; // o naffiche l'ensemble des composants à la suite
 }
