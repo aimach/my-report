@@ -15,9 +15,13 @@ function VisitRow({ visit, handleDeleteButton }) {
       enterDelay={200}
       placement="top"
       title={
-        <>
-          <p>{visit.report_content.substring(0, 500)}</p>
-        </>
+        visit.report_content !== "" ? (
+          <>
+            <p>{visit.report_content.substring(0, 500)}</p>
+          </>
+        ) : (
+          "Le compte-rendu n'a pas encore été rédigé"
+        )
       }
     >
       <TableRow
