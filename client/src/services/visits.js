@@ -31,12 +31,11 @@ const getVisitById = async (visitId) => {
 const createVisit = async (body, forecast) => {
   try {
     let url = "/visits";
-    const createdVisit = await connexion.post(url, body);
+    await connexion.post(url, body);
     if (forecast.date > new Date() && forecast.article_nb !== 0) {
-      const createdForecastVisit = await connexion.post(url, forecast);
+      await connexion.post(url, forecast);
     }
-    if (createdVisit.data && createdForecastVisit.data) return true;
-    return false;
+    return true;
   } catch (error) {
     console.error(error);
     return null;
