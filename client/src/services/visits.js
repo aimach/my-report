@@ -63,30 +63,10 @@ const deleteVisit = async (visitId) => {
   }
 };
 
-const getCommercialStatsPerYer = async () => {
-  try {
-    const response = await connexion.get(`/visits/stat?type=monthly`);
-    if (response.status === 200) return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getAnnualStats = async () => {
-  try {
-    const response = await connexion.get(`/visits/stat?type=all`);
-    if (response.status === 200) return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export {
   getAllVisitsWithCommercialId,
   getVisitById,
   createVisit,
   updateVisit,
   deleteVisit,
-  getCommercialStatsPerYer,
-  getAnnualStats,
 };

@@ -21,7 +21,7 @@ export default function LineChartComponent({ annualStats }) {
   ];
   const months = [
     new Date(2024, 0),
-    new Date(2024, 2),
+    new Date(2024, 1),
     new Date(2024, 2),
     new Date(2024, 3),
     new Date(2024, 4),

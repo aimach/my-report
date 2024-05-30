@@ -5,11 +5,7 @@ import App from "./App.jsx";
 import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
-import {
-  getAllVisitsWithCommercialId,
-  getCommercialStatsPerYer,
-  getAnnualStats,
-} from "./services/visits.js";
+import { getAllVisitsWithCommercialId } from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
 
 import "./index.css";
@@ -44,11 +40,6 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <DirectorPage />,
-        loader: async () => {
-          const commercialStatsPerYer = await getCommercialStatsPerYer();
-          const annualStats = await getAnnualStats();
-          return { commercialStatsPerYer, annualStats };
-        },
       },
       {
         path: "login",

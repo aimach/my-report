@@ -93,7 +93,7 @@ function Header() {
                       sx={{ py: "6px", px: "12px" }}
                     >
                       <Typography variant="body2" color="text.primary">
-                        Dashboard
+                        Statistiques
                       </Typography>
                     </MenuItem>
                   )}
