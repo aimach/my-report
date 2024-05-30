@@ -188,6 +188,7 @@ const getAllSalesForCurrentYear = async () => {
           _id: i,
           salesNb: { $sum: 1 }, // pour chaque mois/année, on compte le nombre de vente
           total: { $sum: "$sales" }, // pour chaque mois/année, on compte le total
+          forecastTotal: { $sum: "$forecast_sales" }, // pour chaque mois/année, on compte le total
         },
       },
     ]);

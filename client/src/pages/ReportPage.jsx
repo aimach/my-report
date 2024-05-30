@@ -115,21 +115,26 @@ function ReportPage() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Typography
-          variant="h2"
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignSelf: "center",
-            textAlign: "center",
-            fontSize: "clamp(3.5rem, 10vw, 4rem)",
-            pb: { xs: 8, sm: 8 },
-            fontWeight: 500,
-          }}
-          color="primary"
-        >
-          {id === "new" ? "Créer un compte rendu" : "Modifier un compte rendu"}
-        </Typography>
+        {action !== "see" && (
+          <Typography
+            variant="h2"
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              alignSelf: "center",
+              textAlign: "center",
+              fontSize: "clamp(3.5rem, 10vw, 4rem)",
+              pb: { xs: 8, sm: 8 },
+              fontWeight: 500,
+            }}
+            color="primary"
+          >
+            {id === "new"
+              ? "Créer un compte rendu"
+              : "Modifier un compte rendu"}
+          </Typography>
+        )}
+
         <Container maxWidth="xl">
           <Box sx={{ flexGrow: 1 }} component="form" onSubmit={submitVisitForm}>
             <Grid container spacing={2}>

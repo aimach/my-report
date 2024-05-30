@@ -4,6 +4,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 export default function LineChartComponent({ annualStats }) {
   const salesNb = [];
   const sum = [];
+  const forecastSum = [];
   const monthLabel = [
     "Janvier",
     "Février",
@@ -35,11 +36,15 @@ export default function LineChartComponent({ annualStats }) {
 
   annualStats.forEach((stat) => {
     if (stat !== null) {
-      salesNb.push(stat.salesNb);
-      sum.push(stat.total);
+      if (stat._id < new Date().getMonth() + 1) {
+        salesNb.push(stat.salesNb);
+        sum.push(stat.total);
+        forecastSum.push(stat.forecastTotal);
+      }
     } else {
       salesNb.push(null);
       sum.push(null);
+      forecastSum.push(null);
     }
   });
 
@@ -67,7 +72,8 @@ export default function LineChartComponent({ annualStats }) {
         series={[
           {
             data: salesNb,
-            label: "ventes",
+            label: "Nombre de ventes",
+            color: "#e15759",
           },
         ]}
         width={500}
@@ -79,7 +85,11 @@ export default function LineChartComponent({ annualStats }) {
         series={[
           {
             data: sum,
-            label: "chiffre d'affaires",
+            label: "Total ventes",
+          },
+          {
+            data: forecastSum,
+            label: "Total préivisionnel",
           },
         ]}
         width={500}
