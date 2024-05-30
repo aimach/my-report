@@ -24,76 +24,61 @@ const getCountVisits = async (commercialId) => {
   });
 };
 
-const getSalesPerCommercial = async (commercial, type) => {
-  if (type === "all") {
-    return await Visit.aggregate([
-      {
-        $match: { commercial: new mongoose.Types.ObjectId(commercial._id) },
-      },
-      {
-        $group: {
-          _id: 0,
-          salesNb: { $sum: 1 },
-          total: { $sum: "$sales" },
-        },
-      },
-    ]);
-  } else if (type === "monthly") {
-    const firstVisit = await getFirstVisit();
-    const allCommercialSales = [];
-    let year = firstVisit[0].year;
-    while (year <= new Date().getFullYear()) {
-      // tant que la date n'est pas supérieur à actuelle
-      let monthNb = 12; // les données sont à récupérée sur 12 mois
-      if (year === new Date().getFullYear()) monthNb = new Date().getMonth(); // si c'est lannée en cours, le nombre de mois est égal au mois actuel - 1
+const getSalesPerCommercial = async (commercial) => {
+  const firstVisit = await getFirstVisit();
+  const allCommercialSales = [];
+  let year = firstVisit[0].year;
+  while (year <= new Date().getFullYear()) {
+    // tant que la date n'est pas supérieur à actuelle
+    let monthNb = 12; // les données sont à récupérée sur 12 mois
+    if (year === new Date().getFullYear()) monthNb = new Date().getMonth(); // si c'est lannée en cours, le nombre de mois est égal au mois actuel - 1
 
-      let annualSales = [];
-      for (let i = 1; i <= monthNb; i++) {
-        // pour chacun des mois de l'année
-        const sales = await Visit.aggregate([
-          {
-            $match: {
-              commercial: new mongoose.Types.ObjectId(commercial._id), // on récupère les ventes du commercial en cours
-              $expr: {
-                $and: [
-                  { $eq: [{ $month: "$date" }, i] }, // du mois en cours
-                  { $eq: [{ $year: "$date" }, year] }, // de l'année en cours
-                ],
-              },
+    let annualSales = [];
+    for (let i = 1; i <= monthNb; i++) {
+      // pour chacun des mois de l'année
+      const sales = await Visit.aggregate([
+        {
+          $match: {
+            commercial: new mongoose.Types.ObjectId(commercial._id), // on récupère les ventes du commercial en cours
+            $expr: {
+              $and: [
+                { $eq: [{ $month: "$date" }, i] }, // du mois en cours
+                { $eq: [{ $year: "$date" }, year] }, // de l'année en cours
+              ],
             },
           },
-          {
-            $group: {
-              _id: {
-                commercial: { id: commercial._id },
-                year: { $year: "$date" },
-                month: { $month: "$date" },
-              },
-              salesNb: { $sum: 1 }, // pour chaque mois/année, on compte le nombre de vente
-              total: { $sum: "$sales" }, // pour chaque mois/année, on compte le total
+        },
+        {
+          $group: {
+            _id: {
+              commercial: { id: commercial._id },
+              year: { $year: "$date" },
+              month: { $month: "$date" },
             },
+            salesNb: { $sum: 1 }, // pour chaque mois/année, on compte le nombre de vente
+            total: { $sum: "$sales" }, // pour chaque mois/année, on compte le total
           },
-        ]);
-        annualSales.push(sales[0]);
-      }
-      allCommercialSales.push({
-        commercial_firstname: commercial.firstname,
-        commercial_lastname: commercial.lastname,
-        year,
-        annualSales,
-      });
-      year++;
+        },
+      ]);
+      annualSales.push(sales[0]);
     }
-    return allCommercialSales;
+    allCommercialSales.push({
+      commercial_firstname: commercial.firstname,
+      commercial_lastname: commercial.lastname,
+      year,
+      annualSales,
+    });
+    year++;
   }
+  return allCommercialSales;
 };
 
-const getAllSales = async (type) => {
+const getAllSales = async () => {
   const allSales = [];
   const commercials = await Commercial.find().exec();
   for (const commercial of commercials) {
     // utilisation de for...of car forEach ne gère pas bien await
-    const sales = await getSalesPerCommercial(commercial, type);
+    const sales = await getSalesPerCommercial(commercial);
     allSales.push(sales);
   }
   return allSales;
@@ -184,6 +169,33 @@ const formatAllSales = (allSalesPerCommercial) => {
   return allCommercialsFormatedSales;
 };
 
+const getAllSalesForCurrentYear = async () => {
+  let annualSales = [];
+  for (let i = 1; i <= 12; i++) {
+    const [sales] = await Visit.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $month: "$date" }, i] }, // du mois en cours
+              { $eq: [{ $year: "$date" }, new Date().getFullYear()] }, // de l'année en cours
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: i,
+          salesNb: { $sum: 1 }, // pour chaque mois/année, on compte le nombre de vente
+          total: { $sum: "$sales" }, // pour chaque mois/année, on compte le total
+        },
+      },
+    ]);
+    annualSales.push(sales);
+  }
+  return annualSales;
+};
+
 export {
   sortVisits,
   findPopulatedVisitWithSkipAndLimit,
@@ -192,4 +204,5 @@ export {
   getAllSales,
   getAllSalesMonthly,
   formatAllSales,
+  getAllSalesForCurrentYear,
 };

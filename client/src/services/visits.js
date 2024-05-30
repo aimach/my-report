@@ -60,9 +60,18 @@ const deleteVisit = async (visitId) => {
   }
 };
 
-const getVisitsForCharts = async () => {
+const getCommercialStatsPerYer = async () => {
   try {
     const response = await connexion.get(`/visits/stat?type=monthly`);
+    if (response.status === 200) return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getAnnualStats = async () => {
+  try {
+    const response = await connexion.get(`/visits/stat?type=all`);
     if (response.status === 200) return response.data;
   } catch (error) {
     console.error(error);
@@ -75,5 +84,6 @@ export {
   createVisit,
   updateVisit,
   deleteVisit,
-  getVisitsForCharts,
+  getCommercialStatsPerYer,
+  getAnnualStats,
 };

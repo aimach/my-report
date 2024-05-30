@@ -8,7 +8,8 @@ import CreateReport from "./pages/CreateReport.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
 import {
   getAllVisitsWithCommercialId,
-  getVisitsForCharts,
+  getCommercialStatsPerYer,
+  getAnnualStats,
 } from "./services/visits.js";
 import { getAllClients } from "./services/clients.js";
 
@@ -44,7 +45,9 @@ const router = createBrowserRouter([
         path: "dashboard",
         element: <DirectorPage />,
         loader: async () => {
-          return getVisitsForCharts();
+          const commercialStatsPerYer = await getCommercialStatsPerYer();
+          const annualStats = await getAnnualStats();
+          return { commercialStatsPerYer, annualStats };
         },
       },
       {

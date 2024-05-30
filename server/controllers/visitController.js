@@ -5,7 +5,7 @@ import {
   formatAllSales,
   getAllSales,
   getCountVisits,
-  getSalesPerCommercial,
+  getAllSalesForCurrentYear,
   sortVisits,
 } from "../services/utils.js";
 
@@ -49,11 +49,17 @@ export const VisitController = {
           res.send({ count }).status(200);
           break;
         case "stat":
-          const allSalesPerCommercial = await getAllSales(req.query.type);
-          const allSalesPerCommercialFormat = formatAllSales(
-            allSalesPerCommercial
-          );
-          res.send(allSalesPerCommercialFormat).status(200);
+          if (req.query.type === "monthly") {
+            const allSalesPerCommercial = await getAllSales();
+            const allSalesPerCommercialFormat = formatAllSales(
+              allSalesPerCommercial
+            );
+            res.send(allSalesPerCommercialFormat).status(200);
+          }
+          if (req.query.type === "all") {
+            const allSalesForCurrentYear = await getAllSalesForCurrentYear();
+            res.send(allSalesForCurrentYear).status(200);
+          }
           break;
         default:
           let visit = await Visit.findById(id).exec();

@@ -5,14 +5,15 @@ import { Typography, Container } from "@mui/material";
 import { AuthContext } from "../context/authContext";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import SalesChart from "../components/SalesChart.jsx";
+import LineChartComponent from "../components/LineChartComponent.jsx";
 
 function DirectorPage() {
   const { profile } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const chartStats = useLoaderData();
+  const { commercialStatsPerYer, annualStats } = useLoaderData();
   const series = [];
-  chartStats.map((chart) => {
+  commercialStatsPerYer.map((chart) => {
     const { commercialFirstname, commercialLastName } = chart[0];
     const serie = chart.map((item) => ({
       year: item.year,
@@ -53,7 +54,14 @@ function DirectorPage() {
         Dashboard
       </Typography>
       <Container maxWidth="xl">
-        {chartStats && <SalesChart series={series} />}
+        <Typography variant="h6" color="primary">
+          Chiffres de l'année
+        </Typography>
+        {annualStats && <LineChartComponent annualStats={annualStats} />}
+        <Typography variant="h6" color="primary">
+          Ventes de l'équipe
+        </Typography>
+        {commercialStatsPerYer && <SalesChart series={series} />}
       </Container>
     </Container>
   );
