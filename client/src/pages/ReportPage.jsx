@@ -5,6 +5,7 @@ import connexion from "../services/connexion";
 import SelectInput from "../components/SelectInput";
 import DisplayClientInfo from "../components/DisplayClientInfo";
 import DateSelect from "../components/DatePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import {
   Typography,
@@ -19,10 +20,11 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 
-function CreateReport() {
+function ReportPage() {
   const { clients, articles } = useLoaderData();
   const { id, action } = useParams();
   const [visit, setVisit] = useState(null);
+  const [forecastDate, setForecastDate] = useState(new Date());
   const [alert, setAlert] = useState({
     open: false,
     message: "Bien enregistré !",
@@ -40,6 +42,8 @@ function CreateReport() {
         article: articles[0]._id,
         article_nb: 0,
         sales: 0,
+        forecast_nb: 0,
+        forecast_sales: 0,
       };
       setVisit(newVisit);
     } else {
@@ -56,18 +60,37 @@ function CreateReport() {
     }
   }, [articles, clients, id]);
 
-  const handleArticleNb = (articleNb) => {
+  const handleArticleNb = (articleNb, fieldType) => {
     const [selectedArticle] = articles.filter(
       (article) => article._id === visit.article
     );
     const totalPrice = selectedArticle.price * articleNb;
-    setVisit({ ...visit, article_nb: articleNb, sales: totalPrice });
+    if (fieldType === "current") {
+      setVisit({ ...visit, article_nb: articleNb, sales: totalPrice });
+    } else if (fieldType === "forecast") {
+      setVisit({
+        ...visit,
+        forecast_nb: articleNb,
+        forecast_sales: totalPrice,
+      });
+    }
   };
 
   const submitVisitForm = async (event) => {
     event.preventDefault();
+    const forecast = {
+      ...visit,
+      date: forecastDate,
+      report_content: "",
+      article_nb: visit.forecast_nb,
+      sales: visit.forecast_sales,
+      forecast_nb: 0,
+      forecast_sales: 0,
+    };
     const isCreatedOrUpdated =
-      id === "new" ? await createVisit(visit) : await updateVisit(visit);
+      id === "new"
+        ? await createVisit(visit, forecast)
+        : await updateVisit(visit);
     if (isCreatedOrUpdated) {
       setAlert({ ...alert, open: true });
       setTimeout(() => {
@@ -221,7 +244,7 @@ function CreateReport() {
                         label="Nombre d'articles"
                         name="articleNb"
                         onChange={(event) =>
-                          handleArticleNb(event.target.value)
+                          handleArticleNb(event.target.value, "current")
                         }
                         value={visit.article_nb}
                         sx={{
@@ -263,28 +286,71 @@ function CreateReport() {
                     color="primary"
                     gutterBottom
                   >
-                    Prochaine visite
+                    {action === "new" ? "Prochaine visite" : "Prévisionnel"}
                   </Typography>
-                  <Grid container spacing={2}>
-                    <Grid xs={4}></Grid>
-                    <Grid xs={4}></Grid>
-                    <Grid xs={4}></Grid>
+                  {action === "new" && (
+                    <Typography component="body2">
+                      Si tous les champs sont complétés, un nouveau compte-rendu
+                      sera créé
+                    </Typography>
+                  )}
+
+                  <Grid container spacing={2} sx={{ mt: 2 }}>
+                    <Grid xs={4}>
+                      <DatePicker
+                        label="Date de la prochaine visite"
+                        disablePast
+                        value={forecastDate}
+                        onChange={(newDate) => setForecastDate(newDate)}
+                        disabled={action === "modify"}
+                      />
+                    </Grid>
+                    <Grid xs={4}>
+                      <TextField
+                        margin="normal"
+                        id="forecastNb"
+                        label="Nombre d'articles prévisionnel"
+                        name="forecastNb"
+                        onChange={(event) =>
+                          handleArticleNb(event.target.value, "forecast")
+                        }
+                        value={visit.forecast_nb}
+                        sx={{
+                          textAlign: "right",
+                          width: "100%",
+                        }}
+                        required
+                        disabled={action !== "create"}
+                      />
+                    </Grid>
+                    <Grid xs={4}>
+                      <TextField
+                        margin="normal"
+                        id="forecastSales"
+                        label="Chiffre d'affaire prévisionnel"
+                        name="forecastSales"
+                        value={`${visit.forecast_sales} €`}
+                        sx={{
+                          width: "100%",
+                        }}
+                        required
+                        disabled={action !== "create"}
+                      />
+                    </Grid>
                   </Grid>
                 </Paper>
               </Grid>
             </Grid>
-            {action !== "see" && ( // si c'est une création ou une modification, afficher le bouton
-              <Button
-                variant="contained"
-                color="success"
-                type="submit"
-                sx={{ mt: 5 }}
-              >
-                {id === "new"
-                  ? "Créer le compte rendu"
-                  : "Modifier le compte rendu"}
-              </Button>
-            )}
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              sx={{ mt: 5 }}
+            >
+              {id === "new"
+                ? "Créer le compte rendu"
+                : "Modifier le compte rendu"}
+            </Button>
           </Box>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -303,4 +369,4 @@ function CreateReport() {
   );
 }
 
-export default CreateReport;
+export default ReportPage;

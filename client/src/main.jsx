@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import ReportList from "./pages/ReportList.jsx";
 import SignIn from "./components/SignIn.jsx";
-import CreateReport from "./pages/CreateReport.jsx";
 import DirectorPage from "./pages/DirectorPage.jsx";
 import {
   getAllVisitsWithCommercialId,
@@ -19,6 +18,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { getAllArticles } from "./services/articles.js";
+import ReportPage from "./pages/ReportPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/visit/:id/:action",
-        element: <CreateReport />,
+        element: <ReportPage />,
         loader: async () => {
           const clients = await getAllClients();
           const articles = await getAllArticles();

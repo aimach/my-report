@@ -28,11 +28,15 @@ const getVisitById = async (visitId) => {
   }
 };
 
-const createVisit = async (body) => {
+const createVisit = async (body, forecast) => {
   try {
     let url = "/visits";
-    const response = await connexion.post(url, body);
-    if (response.data) return true;
+    const createdVisit = await connexion.post(url, body);
+    if (forecast.date > new Date() && forecast.article_nb !== 0) {
+      const createdForecastVisit = await connexion.post(url, forecast);
+    }
+    if (createdVisit.data && createdForecastVisit.data) return true;
+    return false;
   } catch (error) {
     console.error(error);
     return null;

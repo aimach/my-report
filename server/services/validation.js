@@ -7,7 +7,7 @@ const dataValidation = {
         "string.base": "Le nom doit être une chaîne de caractères",
         "any.required": "Le champ nom ne peut être vide",
       }),
-      price: Joi.number().positive().required().messages({
+      price: Joi.number().min(0).required().messages({
         "number.base": "Le prix doit être un nombre",
         "number.positive": "Le prix ne peut pas être négatif",
         "any.required": "Le champ prix ne peut être vide",
@@ -163,7 +163,7 @@ const dataValidation = {
         "string.base": "Le mail doit être une chaîne de caractères",
         "any.required": "Le champ mail ne peut être vide",
       }),
-      report_content: Joi.string().messages({
+      report_content: Joi.string().allow(null, "").messages({
         "string.base":
           "Le champ report_content doit être une chaîne de caractères",
         "any.required": "Le champ report_content ne peut être vide",
@@ -173,22 +173,22 @@ const dataValidation = {
           "Le champ report_content doit être une chaîne de caractères",
         "any.required": "Le champ report_content ne peut être vide",
       }),
-      article_nb: Joi.number().positive().required().messages({
+      article_nb: Joi.number().min(0).required().messages({
         "number.base": "Le champ article_nb doit être un nombre",
         "number.positive": "Le champ article_nb ne peut pas être négatif",
         "any.required": "Le champ article_nb ne peut être vide",
       }),
-      sales: Joi.number().positive().required().messages({
+      sales: Joi.number().min(0).required().messages({
         "number.base": "Le champ sales doit être un nombre",
         "number.positive": "Le champ sales ne peut pas être négatif",
         "any.required": "Le champ sales ne peut être vide",
       }),
-      forecast_nb: Joi.number().positive().required().messages({
+      forecast_nb: Joi.number().min(0).required().messages({
         "number.base": "Le champ forecast_nb doit être un nombre",
         "number.positive": "Le champ forecast_nb ne peut pas être négatif",
         "any.required": "Le champ forecast_nb ne peut être vide",
       }),
-      forecast_sales: Joi.number().positive().required().messages({
+      forecast_sales: Joi.number().min(0).required().messages({
         "number.base": "Le champ forecast_sales doit être un nombre",
         "number.positive": "Le champ forecast_sales ne peut pas être négatif",
         "any.required": "Le champ forecast_sales ne peut être vide",
