@@ -12,7 +12,7 @@ const findPopulatedVisitWithSkipAndLimit = async (
     commercial: commercialId,
   })
     .populate([{ path: "commercial" }, { path: "client" }, { path: "article" }])
-    .sort(sort)
+    .sort(sort.date ? sort : { date: "desc" }) // si la query date existe, on trie en fonction de ce qui est demandé dans les queries, sinon en envoie par de la plus récente à la plus ancienne
     .skip(parseInt(resultNb, 10) * (parseInt(currentPage, 10) - 1))
     .limit(parseInt(resultNb, 10))
     .exec();
