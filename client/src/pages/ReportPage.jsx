@@ -320,7 +320,7 @@ function ReportPage() {
                           width: "100%",
                         }}
                         required
-                        disabled={action !== "create"}
+                        disabled={action !== "new"}
                       />
                     </Grid>
                     <Grid xs={4}>
@@ -334,7 +334,7 @@ function ReportPage() {
                           width: "100%",
                         }}
                         required
-                        disabled={action !== "create"}
+                        disabled={action !== "new"}
                       />
                     </Grid>
                   </Grid>
