@@ -38,7 +38,11 @@ function VisitRow({ visit, handleDeleteButton }) {
       </TableCell>
       <TableCell component="th" scope="row" align="center">
         <Tooltip title="Voir">
-          <IconButton color="primary" aria-label="see-visit">
+          <IconButton
+            color="primary"
+            aria-label="see-visit"
+            onClick={() => navigate(`/visit/${visit._id}/see`)}
+          >
             <VisibilityIcon />
           </IconButton>
         </Tooltip>
@@ -46,7 +50,7 @@ function VisitRow({ visit, handleDeleteButton }) {
           <IconButton
             color="primary"
             aria-label="edit-visit"
-            onClick={() => navigate(`/visit/${visit._id}`)}
+            onClick={() => navigate(`/visit/${visit._id}/modify`)}
           >
             <EditIcon />
           </IconButton>

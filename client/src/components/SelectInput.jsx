@@ -7,6 +7,7 @@ export default function SelectInput({
   visit,
   onChangeFunction,
   selectedItem,
+  action,
 }) {
   return (
     <>
@@ -25,6 +26,7 @@ export default function SelectInput({
         fullWidth
         sx={{ mt: 2 }}
         required
+        disabled={action === "see"}
       >
         <MenuItem key="new" value="new">
           Sélectionner un {type}

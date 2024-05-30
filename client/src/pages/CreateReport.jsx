@@ -21,7 +21,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 function CreateReport() {
   const { clients, articles } = useLoaderData();
-  const { id } = useParams();
+  const { id, action } = useParams();
   const [visit, setVisit] = useState(null);
   const [alert, setAlert] = useState({
     open: false,
@@ -126,6 +126,7 @@ function CreateReport() {
                     visit={visit}
                     onChangeFunction={setVisit}
                     selectedItem={visit.client}
+                    action={action}
                   />
                   <DisplayClientInfo
                     client={
@@ -147,6 +148,7 @@ function CreateReport() {
                     selectedDate={visit.date}
                     visit={visit}
                     setVisit={setVisit}
+                    action={action}
                   />
                 </Paper>
               </Grid>
@@ -180,6 +182,7 @@ function CreateReport() {
                     }
                     value={visit.report_content}
                     required
+                    disabled={action === "see"}
                   />
                 </Paper>
               </Grid>
@@ -208,6 +211,7 @@ function CreateReport() {
                         visit={visit}
                         onChangeFunction={setVisit}
                         selectedItem={visit.article}
+                        action={action}
                       />
                     </Grid>
                     <Grid xs={4}>
@@ -225,6 +229,7 @@ function CreateReport() {
                           width: "100%",
                         }}
                         required
+                        disabled={action === "see"}
                       />
                     </Grid>
                     <Grid xs={4}>
@@ -238,6 +243,7 @@ function CreateReport() {
                           width: "100%",
                         }}
                         required
+                        disabled={action === "see"}
                       />
                     </Grid>
                   </Grid>
@@ -267,16 +273,18 @@ function CreateReport() {
                 </Paper>
               </Grid>
             </Grid>
-            <Button
-              variant="contained"
-              color="success"
-              type="submit"
-              sx={{ mt: 5 }}
-            >
-              {id === "new"
-                ? "Créer le compte rendu"
-                : "Modifier le compte rendu"}
-            </Button>
+            {action !== "see" && ( // si c'est une création ou une modification, afficher le bouton
+              <Button
+                variant="contained"
+                color="success"
+                type="submit"
+                sx={{ mt: 5 }}
+              >
+                {id === "new"
+                  ? "Créer le compte rendu"
+                  : "Modifier le compte rendu"}
+              </Button>
+            )}
           </Box>
           <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: "/visit/:id",
+        path: "/visit/:id/:action",
         element: <CreateReport />,
         loader: async () => {
           const clients = await getAllClients();
