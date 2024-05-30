@@ -24,7 +24,6 @@ export default function BarChartComponent({ series, result, index }) {
         alignItems: "center",
         pb: { xs: 8, sm: 12 },
       }}
-      key={index}
     >
       <Typography variant="h5">Année {series[0].serie[index].year}</Typography>
       <BarChart

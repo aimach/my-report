@@ -73,7 +73,7 @@ export default function LineChartComponent({ annualStats }) {
             },
             {
               data: formatData(annualStats, "forecastTotal"),
-              label: "Total préivisionnel",
+              label: "Total prévisionnel",
             },
           ]}
           width={500}

@@ -15,7 +15,7 @@ export default function SalesChart({ series }) {
       });
 
     components.push(
-      <BarChartComponent series={series} result={result} index={i} />
+      <BarChartComponent series={series} result={result} index={i} key={i} />
     );
   }
 
