@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
+import { AuthContext } from "../context/authContext";
 
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
-import logo from "../../assets/img/my-report-logo.svg";
+import logo from "../assets/img/my-report-logo.svg";
 
 const logoStyle = {
   width: "140px",
@@ -80,7 +80,7 @@ function Header() {
                     </Typography>
                   </MenuItem>
                   <MenuItem
-                    onClick={() => navigate("/visit/new")}
+                    onClick={() => navigate("/visit/new/new")}
                     sx={{ py: "6px", px: "12px" }}
                   >
                     <Typography variant="body2" color="text.primary">

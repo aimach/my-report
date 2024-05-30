@@ -1,6 +1,6 @@
 import "./App.css";
 import CssBaseline from "@mui/material/CssBaseline";
-import Header from "./components/header/Header";
+import Header from "./components/Header";
 import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 import { alpha } from "@mui/material";
