@@ -12,7 +12,6 @@ function DirectorPage() {
 
   const [commercialStatsPerYer, setCommercialStatsPerYer] = useState([]);
   const [annualStats, setAnnualStats] = useState([]);
-  const series = [];
 
   useEffect(() => {
     // on redirige l'utilisateur s'il n'est pas directeur
@@ -27,6 +26,7 @@ function DirectorPage() {
       try {
         const response = await connexion.get(`/visits/stat?type=monthly`);
         if (response.status === 200) {
+          const newSeries = [];
           response.data.forEach((chart) => {
             // on formatte la donnée pour avoir dans le tableau une seule entrée par commercial
             const { commercialFirstname, commercialLastName } = chart[0];
@@ -34,9 +34,9 @@ function DirectorPage() {
               year: item.year,
               data: item.data,
             }));
-            series.push({ commercialFirstname, commercialLastName, serie });
+            newSeries.push({ commercialFirstname, commercialLastName, serie });
           });
-          setCommercialStatsPerYer(series);
+          setCommercialStatsPerYer(newSeries);
         }
       } catch (error) {
         console.error(error);
